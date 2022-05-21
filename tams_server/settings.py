@@ -11,16 +11,20 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+credentials_file_path = os.path.join(BASE_DIR, 'credentials.json')
+with open(credentials_file_path, "r") as data:
+    cred_dict = json.loads(data.read())
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%jydk5qg$k+dq+tm_yk_=znfe^kp^_g(1o3ghzgw#i90&49!ur'
+SECRET_KEY = cred_dict["credentials"]["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -73,13 +77,7 @@ WSGI_APPLICATION = 'tams_server.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+DATABASES = cred_dict["credentials"]["DATABASES"]
 
 
 # Password validation
