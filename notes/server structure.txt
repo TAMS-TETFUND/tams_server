@@ -1,0 +1,29 @@
+The TAMS server is supposed to be responsible for:
+    -   being the aggregation point and primary source of truth for all
+        student/staff registration data.
+    -   It should provide an interface for synching all necessary information 
+        required for a new node device to work.
+    -   It should also have an archive for attendance data to preserve it long 
+        after they were logged and discarded by node devices.
+    -   
+
+==============================keywords========================================
+    -   attendance archive
+    -   staff/student registration data
+    -   new node device information
+ ======
+    - attendance archive
+        - download
+    - staff/student registration data
+        - register
+        - update registration
+        - modify permissions
+    - new node device information
+
+
+===================================for synching between node device and server================================
+    - an api should exist on the server for any data that will be required by the node device (attendance, course
+        registration, student biodata, staff biodata)
+    - the interface on hte node device should have a feature for connecting to the server for several operations.
+        this feature should be only accessible to staff with appropriate permissions to it.
+    - 
