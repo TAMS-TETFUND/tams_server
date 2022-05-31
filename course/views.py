@@ -39,7 +39,7 @@ class CourseDetail(APIView):
 
 
 class CourseList(APIView):
-    """List all faculties, or create a new course.
+    """List all courses, or create a new course.
     """
     def get(self, request, format=None):
         courses = Course.objects.all()

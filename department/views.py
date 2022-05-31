@@ -39,7 +39,7 @@ class DepartmentDetail(APIView):
 
 
 class DepartmentList(APIView):
-    """List all faculties, or create a new department.
+    """List all departments, or create a new department.
     """
     def get(self, request, format=None):
         departments = Department.objects.all()

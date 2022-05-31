@@ -26,7 +26,7 @@ class AcademicSessionDetail(APIView):
 
     def put(self, request, pk, format=None):
         academic_session = self.get_object(pk)
-        serializer = AcademicSessionSerializer(academic_session, data=request.data)    
+        serializer = AcademicSessionSerializer(academic_session, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -39,7 +39,7 @@ class AcademicSessionDetail(APIView):
 
 
 class AcademicSessionList(APIView):
-    """List all faculties, or create a new academic_session.
+    """List all academic sessions, or create a new academic_session.
     """
     def get(self, request, format=None):
         academic_sessions = AcademicSession.objects.all()
