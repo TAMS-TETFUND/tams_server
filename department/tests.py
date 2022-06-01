@@ -3,7 +3,7 @@ from rest_framework.test import APIRequestFactory
 
 from db.models import Department, Faculty
 from department.views import DepartmentDetail, DepartmentList
-
+from tams_server.tests import fixtures
 
 class DepartmentListTestCase(TestCase):
     def setUp(self):
@@ -15,9 +15,8 @@ class DepartmentListTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_department_creation(self):
-        self.faculty = Faculty.objects.create(name="Engineering")
-        self.dept_api_fixture = {'id':1, 'name':'ECE', 'faculty':self.faculty.pk}
-        request = self.factory.post('departments/', **self.dept_api_fixture)
+        Faculty.objects.create(**fixtures.faculty_fixture)
+        request = self.factory.post('departments/', fixtures.department_api_fixture)
         response = DepartmentList.as_view()(request)
         self.assertEqual(response.status_code, 201)
 
@@ -25,9 +24,8 @@ class DepartmentListTestCase(TestCase):
 class DepartmentDetailTestCase(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
-        self.faculty = Faculty.objects.create(name="Engineering")
-        self.dept_api_fixture = {'id':1, 'name':'ECE', 'faculty':self.faculty.pk}
-        self.department = Department.objects.create(name="ECE", faculty=self.faculty)
+        Faculty.objects.create(**fixtures.faculty_fixture)
+        self.department = Department.objects.create(**fixtures.department_fixture)
 
     def test_department_detail(self):
         request = self.factory.get('departments/{}'.format(self.department.pk))
@@ -35,6 +33,8 @@ class DepartmentDetailTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
     
     def test_department_edit(self):
-        request = self.factory.put('departments/{}'.format(self.department.pk), {"id":self.department.pk, "name":"Electronic Engineering", "faculty": self.faculty.pk})
+        modified_dept_name = fixtures.department_api_fixture
+        modified_dept_name["name"] = "Electronic and Robotics Engineeering"
+        request = self.factory.put('departments/{}'.format(self.department.pk), modified_dept_name)
         response = DepartmentDetail.as_view()(request, pk=self.department.pk)
-        self.assertEqual(response.data["name"], "Electronic Engineering")
+        self.assertEqual(response.data["name"], modified_dept_name["name"])
