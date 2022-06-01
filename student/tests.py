@@ -67,3 +67,8 @@ class StudentDetailTestCase(TestCase):
         request = self.factory.put('students/{}/'.format(self.student.pk), modified_api_fixture)
         response = StudentDetail.as_view()(request, pk=self.student.pk)
         self.assertEqual(response.data["first_name"], modified_api_fixture["first_name"])
+
+    def test_student_delete(self):
+        request = self.factory.delete('students/{}/'.format(self.student.pk))
+        response = StudentDetail.as_view()(request, pk=self.student.pk)
+        self.assertEqual(response.status_code, 204)
