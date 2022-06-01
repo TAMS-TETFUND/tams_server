@@ -1,4 +1,3 @@
-from urllib import request
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 
@@ -49,6 +48,8 @@ staff_api_fixture = {
 
 
 class StaffListTestCase(TestCase):
+    """Tests for the StaffList api view"""
+    
     def setUp(self):
         self.factory = APIRequestFactory()
 
@@ -67,6 +68,7 @@ class StaffListTestCase(TestCase):
 
 
 class StaffDetailTestCase(TestCase):
+    """Tests for the StaffDetail api view"""
     def setUp(self):
         self.factory = APIRequestFactory()
         faculty = Faculty.objects.create(**faculty_fixture)
@@ -91,6 +93,10 @@ class StaffDetailTestCase(TestCase):
         response = StaffDetail.as_view()(request, pk=self.staff.pk)
         self.assertEqual(response.data["first_name"], "James")
 
+    def test_staff_delete(self):
+        request = self.factory.delete('staff/{}/'.format(self.staff.pk))
+        response = StaffDetail.as_view()(request, pk=self.staff.pk)
+        self.assertEqual(response.status_code, 204)
 
 class StaffTitleListTestCase(TestCase):
     """Tests for the StaffTitleList api view"""
@@ -115,13 +121,18 @@ class StaffTitleDetailTestCase(TestCase):
         self.staff_title = StaffTitle.objects.create(**staff_title_fixture)
 
     def test_staff_title_detail(self):
-        request = self.factory.get('staff-titles/{}/'.format(self.staff_title.pk))
+        request = self.factory.get('staff/titles/{}/'.format(self.staff_title.pk))
         response = StaffTitleDetail.as_view()(request, pk=self.staff_title.pk)
         self.assertEqual(response.status_code, 200)
     
     def test_staff_title_edit(self):
         modified_staff_title_fixture = staff_title_fixture
         modified_staff_title_fixture["title_full"] = "Associate Professor/Reader"
-        request = self.factory.put('staff-titles/{}/'.format(self.staff_title.pk), modified_staff_title_fixture)
+        request = self.factory.put('staff/titles/{}/'.format(self.staff_title.pk), modified_staff_title_fixture)
         response = StaffTitleDetail.as_view()(request, pk=self.staff_title.pk)
         self.assertEqual(response.data["title_full"], modified_staff_title_fixture["title_full"])
+
+    def test_staff_title_delete(self):
+        request = self.factory.delete('staff/titles/{}/'.format(self.staff_title.pk))
+        response = StaffTitleDetail.as_view()(request, pk=self.staff_title.pk)
+        self.assertEqual(response.status_code, 204)
