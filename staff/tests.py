@@ -3,48 +3,7 @@ from rest_framework.test import APIRequestFactory
 
 from db.models import Department, Faculty, Staff, StaffTitle
 from staff.views import StaffDetail, StaffList, StaffTitleDetail, StaffTitleList
-
-faculty_fixture = {
-    "id": 1,
-    "name": "Engineering"
-}
-department_fixture = {
-    "id": 1,
-    "name": "Electronic Engineering",
-    "faculty_id": 1,
-    "alias": "ECE"
-}
-staff_title_fixture = {
-        "id": 1,
-        "title_full": "Professor",
-        "title": "Prof"
-}
-
-staff_fixture = {
-    "id": 1,
-    "department_id": 1,
-    "username": "SS.4321",
-    "staff_titles": [1],
-    "password": "password",
-    "first_name": "John",
-    "last_name": "Obi",
-    "email": "",
-    "other_names": "Mikel",
-    "staff_number": "SS.4321"
-}
-
-staff_api_fixture = {
-    "id": 1,
-    "department": 1,
-    "username": "SS.4321",
-    "staff_titles": [1],
-    "password": "password",
-    "first_name": "John",
-    "last_name": "Obi",
-    "email": "",
-    "other_names": "Mikel",
-    "staff_number": "SS.4321"
-}
+from tams_server.tests.fixtures import faculty_fixture, department_fixture, staff_title_fixture, staff_fixture, staff_api_fixture
 
 
 class StaffListTestCase(TestCase):
