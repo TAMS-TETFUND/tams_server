@@ -3,31 +3,8 @@ from rest_framework.test import APIRequestFactory
 
 from db.models import Department, Faculty, Student
 from student.views import StudentDetail, StudentList
-from staff.tests import faculty_fixture, department_fixture
+from tams_server.tests.fixtures import faculty_fixture, department_fixture, student_fixture, student_api_fixture
 
-student_fixture = {
-    "id": 1,
-    "department_id": 1,
-    "reg_number": "2020/123456",
-    "first_name": "John",
-    "last_name": "Doe",
-    "possible_grad_yr": 2025,
-    "admission_status": 1,
-    "level_of_study": 2,
-    "sex": 1
-}
-
-student_api_fixture = {
-    "id": 1,
-    "department": 1,
-    "reg_number": "2020/123456",
-    "first_name": "John",
-    "last_name": "Doe",
-    "possible_grad_yr": 2025,
-    "admission_status": 1,
-    "level_of_study": 2,
-    "sex": 1
-}
 
 class StudentListTestCase(TestCase):
     """Tests for the StudentList api view"""
