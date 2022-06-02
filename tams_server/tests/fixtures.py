@@ -5,6 +5,10 @@ faculty_fixture = {
     "id": 1,
     "name": "Engineering"
 }
+academic_session_fixture = {
+    "id": 1,
+    "session": "2020/2021"
+}
 
 department_fixture = {
     "id": 1,
@@ -52,6 +56,7 @@ staff_api_fixture = {
 }
 
 course_fixture = {
+    "id": 1,
     "code": "ECE 371",
     "title": "System Programming",
     "level_of_study":1,
@@ -61,10 +66,50 @@ course_fixture = {
 }
 
 course_api_fixture = {
+    "id": 1,
     "code": "ECE 371",
     "title": "System Programming",
     "level_of_study":1,
     "department":1,
     "unit_load":3,
     "semester": Semester.FIRST
+}
+
+course_registration_fixture = {
+    "id": 1,
+    "session_id": 1,
+    "course_id": 1,
+    "student_id": 1,
+    "semester": Semester.FIRST
+}
+
+course_registration_api_fixture = {
+    "id": 1,
+    "session": 1,
+    "course": 1,
+    "student": 1,
+    "semester": Semester.FIRST
+}
+student_fixture = {
+    "id": 1,
+    "department_id": 1,
+    "reg_number": "2020/123456",
+    "first_name": "John",
+    "last_name": "Doe",
+    "possible_grad_yr": 2025,
+    "admission_status": 1,
+    "level_of_study": 2,
+    "sex": 1
+}
+
+student_api_fixture = {
+    "id": 1,
+    "department": 1,
+    "reg_number": "2020/123456",
+    "first_name": "John",
+    "last_name": "Doe",
+    "possible_grad_yr": 2025,
+    "admission_status": 1,
+    "level_of_study": 2,
+    "sex": 1
 }
