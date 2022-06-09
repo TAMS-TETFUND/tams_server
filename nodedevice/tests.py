@@ -3,7 +3,7 @@ import re
 from rest_framework.test import APIRequestFactory
 from django.test import TestCase
 
-from nodedevice.models import NodeDevice
+from db.models import NodeDevice
 from nodedevice.views import NodeDeviceDetail, NodeDeviceList
 
 class NodeDeviceTestCase(TestCase):

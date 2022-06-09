@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from nodedevice.models import NodeDevice
+from db.models import NodeDevice
 from nodedevice.serializers import NodeDeviceSerializer
 
 
