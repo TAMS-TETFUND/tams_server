@@ -29,8 +29,10 @@ urlpatterns = [
     path("academic-sessions/", include('academicsession.urls')),
     path("courses/", include("course.urls")),
     path("course-registrations/", include("courseregistration.urls")),
-    path("node-devices/", include("nodedevice.urls"))
+    path("node-devices/", include("nodedevice.urls")),
+    path("api/v1/", include('djoser.urls')),
+    path('api/v1/', include('djoser.urls.authtoken')),
 
 ]
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+# urlpatterns = format_suffix_patterns(urlpatterns)
