@@ -1,3 +1,8 @@
+===================================================================================================================
+the overarching goal of this project is a system that will require the least amount of effort and maintenance cost
+    to operate. This is to ensure that it can be seriously considered for adoption by several institutions which 
+    will result in continuous improvement of the system.
+==================================================================================================================
 The TAMS server is supposed to be responsible for:
     -   being the aggregation point and primary source of truth for all
         student/staff registration data.
@@ -27,3 +32,49 @@ The TAMS server is supposed to be responsible for:
     - the interface on hte node device should have a feature for connecting to the server for several operations.
         this feature should be only accessible to staff with appropriate permissions to it.
     - 
+
+===================================implementation details=======================
+
+    -   any frontend that will be implemented for the server should be completely
+            separated from the backend. 
+    -   the backend should be designed as an API (djangorestframework) so that frontend apps could
+            be designed for several platforms while using the backend.
+==========================================issues============================================================
+    - should the server maintain a list of node devices?
+    -   should every node device maintain a complete registration of all students and staff of the school?
+            Does not seem efficient
+            - at every point in time, a public university could have 10,000-15,000 students????
+        - if this approach is adopted, system should automatically change student addmission status to graduated once 
+            their possible year of graduation is exceeded.
+
+****On the occassion of failure of the communication layer of the system, an admin should be able to log into a 
+    node device and download the file for all attendance records/sessions that the
+    device has logged and copy them to the server.
+****On the occassion of failure of the communication layer of the system, the system should inform the user of the
+    failure and encourage the user to take the device to where the server is situated for update of its registration
+    data.
+****What of a scenario where 2 or more devices are to be used for attendance-marking for the same event?
+
+============================todos=======================================
+    - implementation of the feature for easy data upload by admin for easy population of
+        models
+======================================issue==============================================================
+    - in order to maintain uniqueness, every attendance record and attendance session should contain a field with
+        the id of the node device from which it was generated. However, this entails that every node device 
+        must know their device id and atteach it to every row of the attendance they log.
+
+        -----------------possible solution:
+            -   attach the node device id to only the attenance session model object of every event . 
+                Every attendance record is associated with a particular attendance session.
+===============================================================================================================
+The TAMS server could be designed to serve all intitutions that use it. Or is it better to run a single instance of 
+the server for a single institution?
+==================================================================================================================
+**Node device initial server registration
+    -   The node device must have the tams_node running on it
+    -   The node device will receive an ID which will uniquely identify all attendance coming from it.
+    -   The node device will receive a token to enable the server know it is a trusted device to
+        avoid illicit operations by unregistered devices trying to get sensitive data from the server
+    -   Server will transfer relevant data to the node device after registration.
+    -   **registration will only be allowed for authorized personnel
+    -   
