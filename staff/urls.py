@@ -2,7 +2,7 @@ from django.urls.conf import path
 
 from staff.views import StaffDetail, StaffList, StaffTitleDetail, StaffTitleList
 
-app_name="staff"
+app_name = "staff"
 
 urlpatterns = [
     path("", StaffList.as_view()),

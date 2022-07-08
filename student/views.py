@@ -9,8 +9,7 @@ from student.serializers import StudentSerializer
 
 
 class StudentDetail(APIView):
-    """Retrieve, update or delete a student instance
-    """
+    """Retrieve, update or delete a student instance"""
 
     def get_object(self, pk):
         try:
@@ -23,7 +22,6 @@ class StudentDetail(APIView):
         serializer = StudentSerializer(student)
         return Response(serializer.data)
 
-
     def put(self, request, pk, format=None):
         student = self.get_object(pk)
         serializer = StudentSerializer(student, data=request.data)
@@ -31,7 +29,7 @@ class StudentDetail(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
     def delete(self, request, pk, format=None):
         student = self.get_object(pk)
         student.delete()
@@ -39,8 +37,8 @@ class StudentDetail(APIView):
 
 
 class StudentList(APIView):
-    """List all students, or create a new student.
-    """
+    """List all students, or create a new student."""
+
     def get(self, request, format=None):
         students = Student.objects.all()
         serializer = StudentSerializer(students, many=True)

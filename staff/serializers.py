@@ -7,12 +7,17 @@ from department.serializers import DepartmentSerializer
 class StaffTitleSerializer(serializers.ModelSerializer):
     class Meta:
         model = StaffTitle
-        fields = '__all__'
+        fields = "__all__"
 
 
 class StaffSerializer(serializers.ModelSerializer):
-    department = serializers.PrimaryKeyRelatedField(queryset=Department.objects.all(), many=False)
-    staff_titles = serializers.PrimaryKeyRelatedField(queryset=StaffTitle.objects.all(), many=True)
+    department = serializers.PrimaryKeyRelatedField(
+        queryset=Department.objects.all(), many=False
+    )
+    staff_titles = serializers.PrimaryKeyRelatedField(
+        queryset=StaffTitle.objects.all(), many=True
+    )
+
     class Meta:
         model = Staff
-        fields = '__all__'
+        fields = "__all__"
