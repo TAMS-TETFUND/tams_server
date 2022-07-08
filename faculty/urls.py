@@ -2,7 +2,7 @@ from django.urls.conf import path
 
 from faculty.views import FacultyDetail, FacultyList
 
-app_name="faculty"
+app_name = "faculty"
 
 urlpatterns = [
     path("", FacultyList.as_view()),

@@ -9,24 +9,24 @@ from academicsession.serializers import AcademicSessionSerializer
 
 
 class AcademicSessionDetail(APIView):
-    """Retrieve, update or delete a academic_session instance.
-    """
+    """Retrieve, update or delete a academic_session instance."""
 
     def get_object(self, pk):
         try:
             return AcademicSession.objects.get(pk=pk)
         except AcademicSession.DoesNotExist:
             raise Http404
-        
+
     def get(self, request, pk, format=None):
         academic_session = self.get_object(pk)
         serializer = AcademicSessionSerializer(academic_session)
         return Response(serializer.data)
 
-
     def put(self, request, pk, format=None):
         academic_session = self.get_object(pk)
-        serializer = AcademicSessionSerializer(academic_session, data=request.data)
+        serializer = AcademicSessionSerializer(
+            academic_session, data=request.data
+        )
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -39,8 +39,8 @@ class AcademicSessionDetail(APIView):
 
 
 class AcademicSessionList(APIView):
-    """List all academic sessions, or create a new academic_session.
-    """
+    """List all academic sessions, or create a new academic_session."""
+
     def get(self, request, format=None):
         academic_sessions = AcademicSession.objects.all()
         serializer = AcademicSessionSerializer(academic_sessions, many=True)

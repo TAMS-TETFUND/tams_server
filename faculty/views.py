@@ -9,24 +9,22 @@ from faculty.serializers import FacultySerializer
 
 
 class FacultyDetail(APIView):
-    """Retrieve, update or delete a faculty instance.
-    """
+    """Retrieve, update or delete a faculty instance."""
 
     def get_object(self, pk):
         try:
             return Faculty.objects.get(pk=pk)
         except Faculty.DoesNotExist:
             raise Http404
-        
+
     def get(self, request, pk, format=None):
         faculty = self.get_object(pk)
         serializer = FacultySerializer(faculty)
         return Response(serializer.data)
 
-
     def put(self, request, pk, format=None):
         faculty = self.get_object(pk)
-        serializer = FacultySerializer(faculty, data=request.data)    
+        serializer = FacultySerializer(faculty, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -39,8 +37,8 @@ class FacultyDetail(APIView):
 
 
 class FacultyList(APIView):
-    """List all faculties, or create a new faculty.
-    """
+    """List all faculties, or create a new faculty."""
+
     def get(self, request, format=None):
         faculties = Faculty.objects.all()
         serializer = FacultySerializer(faculties, many=True)

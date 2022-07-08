@@ -9,24 +9,22 @@ from course.serializers import CourseSerializer
 
 
 class CourseDetail(APIView):
-    """Retrieve, update or delete a course instance.
-    """
+    """Retrieve, update or delete a course instance."""
 
     def get_object(self, pk):
         try:
             return Course.objects.get(pk=pk)
         except Course.DoesNotExist:
             raise Http404
-        
+
     def get(self, request, pk, format=None):
         course = self.get_object(pk)
         serializer = CourseSerializer(course)
         return Response(serializer.data)
 
-
     def put(self, request, pk, format=None):
         course = self.get_object(pk)
-        serializer = CourseSerializer(course, data=request.data)    
+        serializer = CourseSerializer(course, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -39,8 +37,8 @@ class CourseDetail(APIView):
 
 
 class CourseList(APIView):
-    """List all courses, or create a new course.
-    """
+    """List all courses, or create a new course."""
+
     def get(self, request, format=None):
         courses = Course.objects.all()
         serializer = CourseSerializer(courses, many=True)

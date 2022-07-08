@@ -5,7 +5,10 @@ from faculty.serializers import FacultySerializer
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
-    faculty = serializers.PrimaryKeyRelatedField(queryset=Faculty.objects.all(),many=False)
+    faculty = serializers.PrimaryKeyRelatedField(
+        queryset=Faculty.objects.all(), many=False
+    )
+
     class Meta:
         model = Department
-        fields = '__all__'
+        fields = "__all__"

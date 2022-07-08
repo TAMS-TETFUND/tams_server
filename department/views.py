@@ -9,24 +9,22 @@ from department.serializers import DepartmentSerializer
 
 
 class DepartmentDetail(APIView):
-    """Retrieve, update or delete a department instance.
-    """
+    """Retrieve, update or delete a department instance."""
 
     def get_object(self, pk):
         try:
             return Department.objects.get(pk=pk)
         except Department.DoesNotExist:
             raise Http404
-        
+
     def get(self, request, pk, format=None):
         department = self.get_object(pk)
         serializer = DepartmentSerializer(department)
         return Response(serializer.data)
 
-
     def put(self, request, pk, format=None):
         department = self.get_object(pk)
-        serializer = DepartmentSerializer(department, data=request.data)    
+        serializer = DepartmentSerializer(department, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -39,8 +37,8 @@ class DepartmentDetail(APIView):
 
 
 class DepartmentList(APIView):
-    """List all departments, or create a new department.
-    """
+    """List all departments, or create a new department."""
+
     def get(self, request, format=None):
         departments = Department.objects.all()
         serializer = DepartmentSerializer(departments, many=True)

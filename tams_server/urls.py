@@ -22,17 +22,16 @@ from student.views import StudentDetail, StudentList
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("staff/", include('staff.urls')),
-    path("students/", include('student.urls')),
-    path("faculties/", include('faculty.urls')),
-    path("departments/", include('department.urls')),
-    path("academic-sessions/", include('academicsession.urls')),
+    path("staff/", include("staff.urls")),
+    path("students/", include("student.urls")),
+    path("faculties/", include("faculty.urls")),
+    path("departments/", include("department.urls")),
+    path("academic-sessions/", include("academicsession.urls")),
     path("courses/", include("course.urls")),
     path("course-registrations/", include("courseregistration.urls")),
     path("node-devices/", include("nodedevice.urls")),
-    path("api/v1/", include('djoser.urls')),
-    path('api/v1/', include('djoser.urls.authtoken')),
-
+    path("api/v1/", include("djoser.urls")),
+    path("api/v1/", include("djoser.urls.authtoken")),
 ]
 
 # urlpatterns = format_suffix_patterns(urlpatterns)

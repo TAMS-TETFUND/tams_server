@@ -9,15 +9,14 @@ from courseregistration.serializers import CourseRegistrationSerializer
 
 
 class CourseRegistrationDetail(APIView):
-    """Retrieve or delete a course_registration instance.
-    """
+    """Retrieve or delete a course_registration instance."""
 
     def get_object(self, pk):
         try:
             return CourseRegistration.objects.get(pk=pk)
         except CourseRegistration.DoesNotExist:
             raise Http404
-        
+
     def get(self, request, pk, format=None):
         course_registration = self.get_object(pk)
         serializer = CourseRegistrationSerializer(course_registration)
@@ -30,11 +29,13 @@ class CourseRegistrationDetail(APIView):
 
 
 class CourseRegistrationList(APIView):
-    """List all course registrations, or create a new courseregistration.
-    """
+    """List all course registrations, or create a new courseregistration."""
+
     def get(self, request, format=None):
         course_registrations = CourseRegistration.objects.all()
-        serializer = CourseRegistrationSerializer(course_registrations, many=True)
+        serializer = CourseRegistrationSerializer(
+            course_registrations, many=True
+        )
         return Response(serializer.data)
 
     def post(self, request, format=None):

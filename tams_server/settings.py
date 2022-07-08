@@ -30,7 +30,7 @@ SECRET_KEY = cred_dict["credentials"]["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["192.168.43.243", "localhost"]
 
 
 # Application definition
@@ -49,21 +49,16 @@ INSTALLED_APPS = [
     "course",
     "db",
     "nodedevice",
-
     "djoser",
     "corsheaders",
     "rest_framework.authtoken",
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:8000"
-]
+CORS_ALLOWED_ORIGINS = ["http://192.168.43.243:8000", "http://localhost:3000", "http://localhost:8000"]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
