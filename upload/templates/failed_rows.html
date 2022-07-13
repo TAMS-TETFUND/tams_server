@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}File Errors{% endblock %}
+{% block content %}
+<h3>{{model}} Population - Failed Rows </h3>
+<p class="lead">Upload complete. The following rows failed.</p>
+{% if failed_rows %}
+<ul>
+    {% for row in failed_rows %}
+    <li>
+        {{ row }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

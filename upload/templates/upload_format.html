@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Download Format for Data Files{% endblock %}
+{% block content %}
+<section>
+    <h3 class="pt-2">Database Population Sample</h3>
+    <p class="lead py-3">Download format for CSV files to be uploaded in the database population page.</p>
+    {% include 'message_display.html' %}
+    <form class="pt-5" action="." method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="model"><b>Select Database Table:</b></label>
+            <select name="model" class="form-control" required="required">
+                <option disabled selected value>--select table -- </option>
+                {% for model in models %}
+                <option value="{{model}}">{{model}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success mt-3">Download Format</button>
+    </form>
+</section>
+{% endblock %}
