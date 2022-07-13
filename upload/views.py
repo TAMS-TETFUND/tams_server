@@ -9,6 +9,7 @@ from django.apps import apps
 
 import db.models
 
+
 def model_fields(model_name: str):
     """This method returns the fields in a model"""
     model = apps.get_model(f"db.{model_name}")
@@ -66,7 +67,9 @@ def populate_model(request):
         # check if all the headers in the provided csv are
         # valid model fields.
         selected_model_fields = model_fields(selected_model)
-        invalid_cols = [col for col in list(df) if col not in selected_model_fields]
+        invalid_cols = [
+            col for col in list(df) if col not in selected_model_fields
+        ]
         if len(invalid_cols) != 0:
             messages.add_message(
                 request,
@@ -94,7 +97,9 @@ def populate_model(request):
         # save rows to the model
         for index, row in df.iterrows():
             try:
-                eval("db.models.%s" % selected_model).objects.create(**row.to_dict())
+                eval("db.models.%s" % selected_model).objects.create(
+                    **row.to_dict()
+                )
             except Exception as e:
                 # write failed rows to a list
                 failed_rows.append([row.to_dict(), e])
@@ -102,7 +107,7 @@ def populate_model(request):
         if len(failed_rows) > 0:
             context = {"failed_rows": failed_rows, "model": selected_model}
             return render(request, "failed_rows.html", context)
-        
+
         return HttpResponseRedirect(reverse("upload"))
 
     return render(request, template, {"models": models_list})

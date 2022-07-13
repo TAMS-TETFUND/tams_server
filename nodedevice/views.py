@@ -26,7 +26,7 @@ from nodedevice.serializers import NodeDeviceSerializer
 
 def device_fixtures(request):
     """Get data to be used to populate new device db."""
-    data=dump_data()
+    data = dump_data()
     return JsonResponse(json.dumps(data), safe=False)
 
 
