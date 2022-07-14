@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+
+{% if next %}
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed, please contact 
+        the site admin.
+    </p>
+    {% else %}
+    <p>Please login to see this page.</p>
+    {% endif %}
+{% endif %}
+<hr>
+<br><h3 class="d-flex justify-content-center">Login</h3>
+<form action="{% url 'login' %}" method="POST">
+    {% csrf_token %}
+    <table class="d-flex justify-content-center" >
+        <tr>
+            <td>{{ form.username.label_tag }}</td>
+            <td>{{ form.username  }}</td>
+        </tr>
+        <tr>
+            <td>{{ form.password.label_tag }}</td>
+            <td>{{ form.password }}</td>
+        </tr>
+    </table>
+    <div class="d-flex justify-content-center">
+        <br><br>
+        <input class="btn btn-lg btn-success ml-5" type="submit" value="Login">
+        <input type="hidden" name="next" value="{{ next }}">
+    </div>
+</form>
+<hr>
+{# Assume you setup the password reset view in your URLconf #}
+
+{% endblock %}
