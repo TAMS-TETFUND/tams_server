@@ -11,6 +11,7 @@ from django.apps import apps
 
 import db.models
 
+
 def model_fields(model_name: str):
     """This method returns the fields in a model"""
     model = apps.get_model(f"db.{model_name}")
@@ -19,7 +20,7 @@ def model_fields(model_name: str):
         name = field.name
         if field.is_relation:
             if field.many_to_one:
-                name += '_id'
+                name += "_id"
             else:
                 # don't include manytomanyfields in this module
                 continue
@@ -66,7 +67,11 @@ def populate_model(request):
 
         # check if user has permission to add to upload to the db table
         if not request.user.has_perm("db.add_%s" % selected_model.lower()):
-            messages.add_message(request, messages.WARNING, "This operation is not permitted for current user.")
+            messages.add_message(
+                request,
+                messages.WARNING,
+                "This operation is not permitted for current user.",
+            )
             return HttpResponseRedirect(reverse("upload"))
         # checking if uploaded file is a valid csv
         try:
@@ -99,7 +104,7 @@ def populate_model(request):
         df = df.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
 
         # replace NaNs with None
-        df = df.replace({np.nan:None})
+        df = df.replace({np.nan: None})
 
         if df.empty:
             messages.add_message(request, messages.WARNING, "File empty")
