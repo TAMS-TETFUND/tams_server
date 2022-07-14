@@ -1,19 +1,30 @@
 import csv
 
+import numpy as np
 import pandas as pd
 from django.urls import reverse
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.apps import apps
 
 import db.models
 
-
 def model_fields(model_name: str):
     """This method returns the fields in a model"""
     model = apps.get_model(f"db.{model_name}")
-    return [field.name for field in model._meta.fields]
+    model_fields = []
+    for field in model._meta.fields:
+        name = field.name
+        if field.is_relation:
+            if field.many_to_one:
+                name += '_id'
+            else:
+                # don't include manytomanyfields in this module
+                continue
+        model_fields.append(name)
+    return model_fields
 
 
 def models_open_to_upload():
@@ -35,6 +46,7 @@ def models_open_to_upload():
     return models_list
 
 
+@login_required
 def populate_model(request):
     """
     This view will be responsible for populating server models.
@@ -52,6 +64,10 @@ def populate_model(request):
             )
             return HttpResponseRedirect(reverse("upload"))
 
+        # check if user has permission to add to upload to the db table
+        if not request.user.has_perm("db.add_%s" % selected_model.lower()):
+            messages.add_message(request, messages.WARNING, "This operation is not permitted for current user.")
+            return HttpResponseRedirect(reverse("upload"))
         # checking if uploaded file is a valid csv
         try:
             df = pd.read_csv(request.FILES["data_file"], skipinitialspace=True)
@@ -81,6 +97,9 @@ def populate_model(request):
 
         # strip whitespaces from df
         df = df.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
+
+        # replace NaNs with None
+        df = df.replace({np.nan:None})
 
         if df.empty:
             messages.add_message(request, messages.WARNING, "File empty")
@@ -113,6 +132,7 @@ def populate_model(request):
     return render(request, template, {"models": models_list})
 
 
+@login_required
 def data_file_format(request):
     """
     This view will provide the user with the format of the CSV
