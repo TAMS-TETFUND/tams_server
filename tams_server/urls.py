@@ -14,6 +14,7 @@ urlpatterns = [
     path("faculties/", include("faculty.urls")),
     path("departments/", include("department.urls")),
     path("academic-sessions/", include("academicsession.urls")),
+    path("attendance/", include("attendance.urls")),
     path("courses/", include("course.urls")),
     path("course-registrations/", include("courseregistration.urls")),
     path("node-devices/", include("nodedevice.urls")),
