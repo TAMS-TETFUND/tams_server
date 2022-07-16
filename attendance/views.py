@@ -13,7 +13,7 @@ from db.models import (
     AttendanceRecord,
     AttendanceSession,
 )
-from attendance.serializers import AttendanceRecordSerializer, AttendanceSessionSerializer
+from attendance.serializers import AttendanceSessionSerializer
 
 
 @login_required
