@@ -17,10 +17,10 @@
                                 <a href="/session/{{session.id}}">
                                 {{ session.course.code }}: {{ session.course.title }}</a>
                             </td>
-                            <td>{{ session.event_type }}</td>
+                            <td>{{ session.event_type_detail }}</td>
                             <td>{{ session.start_time }}</td>
                             <td>{{ session.duration }}</td>
-                            <td>{{ session.status }}</td>
+                            <td>{{ session.status_detail }}</td>
                         </tr>
                 </table>
             </template>
