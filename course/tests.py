@@ -1,7 +1,7 @@
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 
-from db.models import Department, Faculty, Semester, Course
+from db.models import Department, Faculty, SemesterChoices, Course
 from course.views import CourseDetail, CourseList
 from tams_server.tests import fixtures
 
