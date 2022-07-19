@@ -1,5 +1,8 @@
 import json
+import os
 
+from django.core.management import call_command
+from django.core.wsgi import get_wsgi_application
 from django.http import Http404, JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
@@ -9,6 +12,9 @@ from rest_framework import status
 from db.models import NodeDevice
 from db.datasynch import dump_data
 from nodedevice.serializers import NodeDeviceSerializer
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tams_server.settings")
+application = get_wsgi_application()
 
 
 # @api_view(['GET'])
@@ -72,3 +78,19 @@ class NodeDeviceList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class NodeSyncView(APIView):
+    def get(self, request):
+        dump_file = 'server_dump.json'
+
+        # dump the data in a file
+        output = open(dump_file, 'w')  # Point stdout at a file for dumping data to.
+        call_command('dumpdata', 'db', format='json', stdout=output)
+        output.close()
+
+        output = open(dump_file)  # reading the dumped data
+        y = json.load(output)
+        output.close()
+
+        return Response(y)
