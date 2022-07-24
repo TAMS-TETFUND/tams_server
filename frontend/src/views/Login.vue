@@ -2,13 +2,16 @@
     <div class="log-in-page p-5 rounded-3">
         <form @submit.prevent="submitForm">
             <p class="lead">Login</p>
+            <div v-if="errors">
+                <p v-for="error in errors" v-bind:key="error">{{error}}</p>
+            </div>
             <div class="mb-3">
                 <label for="Staff Number" class="col-form-label">Staff Number</label>
-                <input type="text" class="form-control" v-model="username" />
+                <input type="text" class="form-control" v-model="username" required="required" />
             </div>
             <div class="mb-3">
                 <label for="password" class="col-form-label">Password</label>
-                <input type="password" class="form-control" v-model="password">
+                <input type="password" class="form-control" v-model="password" required="required">
             </div>
             <button class="btn btn-success" type="submit"><BIconBoxArrowInRight />Log In</button>
         </form>
@@ -28,6 +31,7 @@ export default {
         return {
             username: '',
             password: '',
+            message: '',
             errors: []
         }
     },
@@ -49,8 +53,6 @@ export default {
                 .post("/api/v1/token/login/", formData)
                 .then(response => {
                     const token = response.data.auth_token
-                    console.log("This is where we are")
-                    console.log(response.data)
                     this.$store.commit('setToken', token)
 
                     localStorage.setItem("token", token)

@@ -15,6 +15,12 @@
                     <li class="nav-item">
                       <router-link class="nav-link a" to="/attendance">Attendance Records</router-link>
                     </li>
+                    <li class="nav-item">
+                      <router-link class="nav-link a" to="/attendance/by-course">Attendance By Course</router-link>
+                    </li>
+                    <li class="nav-item">
+                      <router-link class="nav-link a" to="/draggable">Draggable Demo</router-link>
+                    </li>
 
                     <template v-if="$store.state.isAuthenticated">
                     <li class="nav-item">

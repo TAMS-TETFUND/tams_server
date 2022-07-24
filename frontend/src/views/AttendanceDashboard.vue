@@ -1,6 +1,9 @@
 <template>
     <section>
         <h3 class="mx-auto">Attendance Records</h3>
+            <div v-if="errors">
+                <p v-for="error in errors" v-bind:key="error">{{error}}</p>
+            </div>
             <template v-if="attendance_sessions">
                 <table class="table text-light">
                     <thead>
@@ -13,10 +16,7 @@
                         </tr>
                     </thead>
                         <tr v-for="session in attendance_sessions" v-bind:key="session.id">
-                            <td>
-                                <a href="/session/{{session.id}}">
-                                {{ session.course.code }}: {{ session.course.title }}</a>
-                            </td>
+                            <td><a v-bind:href="urlBase + session.id">{{ session.course.code }}: {{ session.course.title }}</a></td>
                             <td>{{ session.event_type_detail }}</td>
                             <td>{{ session.start_time }}</td>
                             <td>{{ session.duration }}</td>
@@ -35,17 +35,20 @@ import axios from 'axios'
 export default {
     data() {
         return{
-            attendance_sessions: null
+            attendance_sessions: null,
+            urlBase: axios.defaults.baseURL + '/api/v1/attendance/session/',
+            errors: []
         }
     },
     async mounted(){
         await axios
-        .get(`/attendance/`, {params: {Token: this.$store.state.token}})
+        .get(`/api/v1/attendance/`, {
+            headers: {Authorization: 'Token ' + this.$store.state.token}
+        })
         .then(response =>{
-            console.log(response.data)
             this.attendance_sessions = response.data
         })
         
-    }
+    },
 }
 </script>

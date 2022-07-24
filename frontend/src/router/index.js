@@ -2,7 +2,10 @@ import { createWebHistory, createRouter } from "vue-router"
 
 import Home from "@/views/Home.vue"
 import Login from "@/views/Login.vue"
+import PageNotFound from "@/views/PageNotFound.vue"
 import AttendanceDashboard from "@/views/AttendanceDashboard.vue"
+import AttendanceByCourse from "@/views/AttendanceByCourse.vue"
+import DraggableDemo from "@/views/DraggableDemo.vue"
 import store from "../store"
 
 const routes = [
@@ -12,9 +15,23 @@ const routes = [
         component: Home,
     },
     {
+        path: "/draggable",
+        name: "DraggableDemo",
+        component: DraggableDemo,
+    },
+    {
         path: "/attendance",
         name: "Attendance",
         component: AttendanceDashboard,
+
+        meta: {
+            requireLogin: true
+        }
+    },
+    {
+        path: "/attendance/by-course",
+        name: "AttendanceByCourse",
+        component: AttendanceByCourse,
 
         meta: {
             requireLogin: true
@@ -28,6 +45,11 @@ const routes = [
         meta: {
             disableIfLoggedIn: true
         }
+    },
+    {
+        path: "/:catchAll(.*)",
+        name: "PageNotFound",
+        component: PageNotFound,
     }
 ]
 
