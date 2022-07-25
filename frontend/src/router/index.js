@@ -7,6 +7,7 @@ import AttendanceDashboard from "@/views/AttendanceDashboard.vue"
 import AttendanceByCourse from "@/views/AttendanceByCourse.vue"
 import DraggableDemo from "@/views/DraggableDemo.vue"
 import store from "../store"
+import NProgress from "nprogress"
 
 const routes = [
     {
@@ -58,11 +59,22 @@ const router = createRouter({
     routes,
 })
 
+router.beforeResolve((to, from, next) => {
+    if (to.name) {
+        NProgress.start()
+    }
+    next()
+})
+
 router.beforeEach((to, from , next) => {
     if(to.matched.some(record => record.meta.requireLogin) && !store.state.isAuthenticated){
         next({name: 'Login', query: {to: to.path} })
     } else {
         next()
     }
+})
+
+router.afterEach(() =>{
+    NProgress.done()
 })
 export default router
