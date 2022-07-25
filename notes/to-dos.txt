@@ -10,6 +10,9 @@
     = project security & logging
     = communication layer implementation
     = data synching
+    = testing the face-recognition feature in different lighting to ascertain optimal conditions for 
+        its usage. There is a jitter attribute capture of the registration image that could be tweaked
+        to see if the accuracy of the feature will improve in different lighting conditions.
 ==================issues=====================================================================
     = the network setup window on the node device assumes that a keyboard is available
         on the node device. There maybe need to implement a compact keypad with  all characters
