@@ -1,4 +1,4 @@
-from db.models import Semester
+from db.models import SemesterChoices
 
 
 faculty_fixture = {
@@ -62,7 +62,7 @@ course_fixture = {
     "level_of_study":1,
     "department_id":1,
     "unit_load":3,
-    "semester": Semester.FIRST
+    "semester": SemesterChoices.FIRST
 }
 
 course_api_fixture = {
@@ -72,7 +72,7 @@ course_api_fixture = {
     "level_of_study":1,
     "department":1,
     "unit_load":3,
-    "semester": Semester.FIRST
+    "semester": SemesterChoices.FIRST
 }
 
 course_registration_fixture = {
@@ -80,7 +80,7 @@ course_registration_fixture = {
     "session_id": 1,
     "course_id": 1,
     "student_id": 1,
-    "semester": Semester.FIRST
+    "semester": SemesterChoices.FIRST
 }
 
 course_registration_api_fixture = {
@@ -88,7 +88,7 @@ course_registration_api_fixture = {
     "session": 1,
     "course": 1,
     "student": 1,
-    "semester": Semester.FIRST
+    "semester": SemesterChoices.FIRST
 }
 student_fixture = {
     "id": 1,
