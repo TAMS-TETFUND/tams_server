@@ -90,7 +90,7 @@ class NodeSyncView(APIView):
         output.close()
 
         output = open(dump_file)  # reading the dumped data
-        y = json.load(output)
+        response_data = json.load(output)
         output.close()
 
-        return Response(y)
+        return Response(response_data)
