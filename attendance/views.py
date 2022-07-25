@@ -7,7 +7,6 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
 
 from db.models import (
     AttendanceRecord,
@@ -85,7 +84,6 @@ def download_attendance(request, pk):
 
 class AttendanceSessionList(APIView):
     """Lists all attendance sessions belonging to user making request"""
-    # permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None):
         attendance_sessions = AttendanceSession.objects.filter(initiator_id=request.user.id)
