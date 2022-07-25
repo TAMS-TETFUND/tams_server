@@ -93,4 +93,6 @@ class NodeSyncView(APIView):
         response_data = json.load(output)
         output.close()
 
+        # cleaning up temp_files for security and space conservation
+        os.remove(dump_file)
         return Response(response_data)
