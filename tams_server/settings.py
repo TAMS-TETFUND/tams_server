@@ -34,8 +34,7 @@ SECRET_KEY = cred_dict["credentials"]["SECRET_KEY"]
 DEBUG = True
 # DEBUG = False
 
-ALLOWED_HOSTS = ["192.168.43.243", "localhost"]
-
+ALLOWED_HOSTS = ["192.168.43.243", "localhost", "127.0.0.1", ]
 
 # Application definition
 
@@ -110,11 +109,9 @@ REST_FRAMEWORK = {
 
 WSGI_APPLICATION = "tams_server.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 DATABASES = cred_dict["credentials"]["DATABASES"]
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -134,7 +131,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # use custom user model
 AUTH_USER_MODEL = "db.AppUser"
 
@@ -152,7 +148,6 @@ TIME_ZONE = "Africa/Lagos"
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
