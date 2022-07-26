@@ -39,7 +39,7 @@ def download_attendance(request, pk):
             "student__department",
             "student__department__name",
             "student__department__faculty",
-            "logged_by",
+            "check_in_by",
         )
     )
     if request.method == "POST":
@@ -75,7 +75,7 @@ def download_attendance(request, pk):
                 "Name": f'{row["student__last_name"].capitalize()} {row["student__first_name"].capitalize()}',
                 "Reg. Number": row["student__reg_number"],
                 "Department":  row["student__department__name"],
-                "Sign In": f'{datetime.strftime(row["logged_by"], "%H:%M")}',
+                "Sign In": f'{datetime.strftime(row["check_in_by"], "%H:%M")}',
             }
         )
 
