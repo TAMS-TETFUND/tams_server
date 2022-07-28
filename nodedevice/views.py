@@ -1,9 +1,10 @@
+from http import HTTPStatus
 import json
 import os
 
 from django.core.management import call_command
 from django.core.wsgi import get_wsgi_application
-from django.http import Http404, JsonResponse
+from django.http import Http404, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -14,20 +15,6 @@ from nodedevice.serializers import NodeDeviceSerializer
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tams_server.settings")
 application = get_wsgi_application()
-
-
-
-# @api_view(['GET'])
-# def device_fixtures(request):
-#     """Get data to be used to populate new device db."""
-#     if request.method == 'GET':
-#         data = dump_data()
-#         # try:
-#         #     json.loads(data)
-#         # except ValueError as e:
-#         #     return Response("Error getting data: %s" % e , status=status.HTTP_400_BAD_REQUEST)
-#         # else:
-#         return Response(json.dumps(data), status.HTTP_200_OK)
 
 
 def device_fixtures(request):
@@ -43,7 +30,7 @@ class NodeDeviceDetail(APIView):
         try:
             return NodeDevice.objects.get(pk=pk)
         except NodeDevice.DoesNotExist:
-            raise Http404
+            return Http404
 
     def get(self, request, pk, format=None):
         node_device = self.get_object(pk)
@@ -81,8 +68,15 @@ class NodeDeviceList(APIView):
 
 
 class NodeSyncView(APIView):
-    def get(self, request):
+    def get(self, request, device_id, token):
         dump_file = os.path.join('dumps', 'server_dump.json')
+        try:
+            node_device = NodeDevice.objects.get(id=device_id)
+        except NodeDevice.DoesNotExist:
+            return HttpResponseBadRequest("Node device does not exist")
+        
+        if node_device.token != token:
+            return HttpResponseForbidden("Node Device Authentication Failed")
 
         # dump the data in a file
         output = open(dump_file, 'w')  # Point stdout at a file for dumping data to.
@@ -96,3 +90,4 @@ class NodeSyncView(APIView):
         # cleaning up temp_files for security and space conservation
         os.remove(dump_file)
         return Response(response_data)
+

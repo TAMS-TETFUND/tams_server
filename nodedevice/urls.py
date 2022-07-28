@@ -6,7 +6,7 @@ app_name = "nodedevice"
 
 urlpatterns = [
     path("", NodeDeviceList.as_view()),
-    path("backup/", NodeSyncView.as_view()),
+    path("backup/id=<int:device_id>&token=<str:token>/", NodeSyncView.as_view()),
     path("<int:pk>/", NodeDeviceDetail.as_view()),
     path("init/", device_fixtures),
 ]
