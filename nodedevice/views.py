@@ -8,13 +8,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from db.models import NodeDevice
+from db.models import NodeDevice, Student, Staff
 from db.datasynch import dump_data, EXCLUDED_TABLES
 from nodedevice.serializers import NodeDeviceSerializer
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tams_server.settings")
 application = get_wsgi_application()
-
 
 
 # @api_view(['GET'])
@@ -82,15 +81,38 @@ class NodeDeviceList(APIView):
 
 class NodeSyncView(APIView):
     def get(self, request):
-        dump_file = os.path.join('dumps', 'server_dump.json')
+        files = (
+            os.path.join('dumps', 'staff_dump.json'),
+            os.path.join('dumps', 'student_dump.json'),
+        )
 
-        # dump the data in a file
-        output = open(dump_file, 'w')  # Point stdout at a file for dumping data to.
-        call_command('dumpdata', 'db', exclude=EXCLUDED_TABLES, format='json', stdout=output)
-        output.close()
+        db = (
+            "db.staff",
+            "db.student",
+        )
 
-        output = open(dump_file)  # reading the dumped data
-        response_data = json.load(output)
-        output.close()
+        # Staff filter
+        with open(files[0], 'w') as output:
+            call_command("dump_object", db[0], [i.pk for i in Staff.objects.filter(is_exam_officer=False)],
+                         stdout=output)
 
-        return Response(response_data)
+        # Student filter
+        with open(files[1], 'w') as output:
+            call_command("dump_object", db[1], [i.pk for i in Student.objects.filter(is_active=True)],
+                         stdout=output)
+
+        # merge json files while removing duplicate values
+        output = []
+        seen = set()
+
+        for f in files:
+            f = open(f)
+            data = json.loads(f.read())
+            for obj in data:
+                key = '%s|%s' % (obj['model'], obj['pk'])
+                if key not in seen:
+                    seen.add(key)
+                    output.append(obj)
+            f.close()
+
+        return Response(output)
