@@ -14,17 +14,17 @@ class StaffDetail(APIView):
 
     def get_object(self, pk):
         try:
-            return Staff.objects.get(pk=pk)
+            return Staff.objects.get(pk=pk.upper())
         except Staff.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
-        staff = self.get_object(pk)
+        staff = self.get_object(pk.upper())
         serializer = StaffSerializer(staff)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
-        staff = self.get_object(pk)
+        staff = self.get_object(pk.upper())
         serializer = StaffSerializer(staff, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -33,7 +33,7 @@ class StaffDetail(APIView):
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
-        staff = self.get_object(pk)
+        staff = self.get_object(pk.upper())
         staff.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
