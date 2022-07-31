@@ -20,10 +20,11 @@
 =====================server frontend=========================================================
 Features:
 = attendance list generation on a per class, per department, per faculty basis.
-
+=check a particular student's attendance history?
 =============================
 If analytics for course attendance is created, who is allowed to 
 view it?
+    = All staff? (Is attendance such a sensitive information that records should be so restricted?)
     = All staff in the department?
     = All staff that are assigned to teach the course?
     = There should be a per-session course allocation model that
@@ -33,3 +34,4 @@ view it?
         attendance for a particular course (Total number of lectures
         in a given session and how many each student attended with 
         the percentage attendance percentage)
+======================================
