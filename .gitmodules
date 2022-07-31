@@ -1,4 +1,4 @@
 [submodule "db"]
 	path = db
 	url = https://github.com/mebi36/db
-	branch=main
+	branch = main
