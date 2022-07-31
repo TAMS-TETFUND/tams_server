@@ -1,14 +1,14 @@
 <template>
 <body class="bg-dark text-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3 fixed-top border-bottom border-secondary">
-        <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-gradient py-3 fixed-top border-bottom border-secondary">
+        <div class="container-fluid mx-3">
             <router-link class="navbar-brand" to="/">TAMS</router-link>    
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navmenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navmenu">
-                <ul class="navbar-nav ms-auto">
+            <div class="collapse navbar-collapse justify-content-end" id="navmenu">
+                <ul class="navbar-nav">
                     <li class="nav-item">
                       <router-link class="nav-link a" to="/">Dashboard</router-link>
                     </li>
@@ -23,15 +23,18 @@
                     </li>
 
                     <template v-if="$store.state.isAuthenticated">
-                    <li class="nav-item">
-                      <router-link class="nav-link a" to="/">Profile</router-link>
-                    </li>
-                    <li class="nav-item">
-                      <button class=" btn btn-dark nav-link a" @click="logout()">Log out</button>
+                    <li class="nav-item dropdown">
+                      <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <b-icon-person-fill class="text-white h4"></b-icon-person-fill>
+                      </a>
+                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDopdown">
+                        <li><router-link class="a dropdown-item" to="/">Profile</router-link></li>
+                        <li><button class=" btn btn-dark a dropdown-item" @click="logout()">Log out</button></li>
+                      </ul>
                     </li>
                     </template>
                     <li class="nav-item" v-else>
-                      <router-link class="nav-link a" to="/login">Log In</router-link>
+                      <router-link class="btn btn-success px-5" to="/login">Log In</router-link>
                     </li>
                 </ul>
             </div>
@@ -39,7 +42,11 @@
     </nav>
     <section class="p-lg-0 text-center text-white">
         <div class="container">
-            <router-view />
+            <router-view v-slot="{ Component }">
+              <transition name="fade" mode="out-in">
+                <component :is="Component" />
+              </transition>
+            </router-view>
         </div>
     </section>
 </body>
@@ -47,9 +54,12 @@
 
 <script>
 import axios from 'axios'
-
+import { BIconPersonFill } from 'bootstrap-icons-vue'
 export default {
   name: 'App',
+  components: {
+    BIconPersonFill
+  },
   beforeCreate(){
     this.$store.commit('initializeStore')
 
@@ -120,5 +130,14 @@ html {
 }
 body {
   min-height: 100vh;
+}
+.face-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.25s ease-out;
+}
+.a:active::after{
+  border-bottom: 1px solid green;
 }
 </style>

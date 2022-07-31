@@ -1,19 +1,29 @@
 <template>
-    <div class="log-in-page p-5 rounded-3">
+    <div class="log-in-page p-3 rounded-3">
+        <div v-if="submitting">
+            <div class="spinner-grow text-success" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>            
+        </div>
         <form @submit.prevent="submitForm">
-            <p class="lead">Login</p>
-            <div v-if="errors">
-                <p v-for="error in errors" v-bind:key="error">{{error}}</p>
+            <h3 class="pb-4">Login</h3>
+            <div class="card bg-secondary bg-opacity-25 text-danger lead" v-if="errors"><b>
+                <div class="card-body">
+                    <p v-for="error in errors" v-bind:key="error" class="">
+                        {{error.includes(":") ? error.split(":")[1] : error}}
+                    </p>    
+                </div>
+            </b>
             </div>
             <div class="mb-3">
                 <label for="Staff Number" class="col-form-label">Staff Number</label>
-                <input type="text" class="form-control" v-model="username" required="required" />
+                <input type="text" class="form-control" v-model="username" required="required" :disabled="submitting" />
             </div>
             <div class="mb-3">
                 <label for="password" class="col-form-label">Password</label>
-                <input type="password" class="form-control" v-model="password" required="required">
+                <input type="password" class="form-control" v-model="password" required="required" :disabled="submitting">
             </div>
-            <button class="btn btn-success" type="submit"><BIconBoxArrowInRight />Log In</button>
+            <button class="btn btn-success" type="submit" :disabled="submitting"><BIconBoxArrowInRight />Log In</button>
         </form>
 
     </div>
@@ -32,7 +42,8 @@ export default {
             username: '',
             password: '',
             message: '',
-            errors: []
+            errors: null,
+            submitting: false
         }
     },
     mounted() {
@@ -40,6 +51,7 @@ export default {
     },
     methods: {
         async submitForm() {
+            this.submitting = true
             axios.defaults.headers.common["Authorization"] = ""
 
             localStorage.removeItem("token")
@@ -71,16 +83,22 @@ export default {
                     this.$router.push(toPath)
                 })
                 .catch(error => {
+                    this.errors = []
+
                     if(error.response) {
+                        console.log(error.response.status)
+                        if (error.response.status == 0){
+                            this.errors.push('Failed to connect to server.')
+                        }else{
                         for (const property in error.response.data) {
                             this.errors.push(`${property}: ${error.response.data[property]}`)
-                        }
+                        }}
                     } else {
                         this.errors.push('Something went wrong. Please try again')
-
                         console.log(JSON.stringify(error))
                     }
                 })
+                this.submitting = false
         }
     }
 }
