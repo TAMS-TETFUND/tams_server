@@ -4,17 +4,19 @@ import os
 from django.core.management import call_command
 from django.core.wsgi import get_wsgi_application
 from django.http import Http404, JsonResponse
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from db.models import NodeDevice
+from db.models import NodeDevice, Student, Staff, Course
 from db.datasynch import dump_data, EXCLUDED_TABLES
+from nodedevice.auth import NodeTokenAuth
 from nodedevice.serializers import NodeDeviceSerializer
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tams_server.settings")
 application = get_wsgi_application()
-
 
 
 # @api_view(['GET'])
@@ -66,6 +68,7 @@ class NodeDeviceDetail(APIView):
 
 class NodeDeviceList(APIView):
     """List all node devices, or create a new node_device."""
+    authentication_classes = (NodeTokenAuth,)
 
     def get(self, request, format=None):
         node_devices = NodeDevice.objects.all()
@@ -82,17 +85,44 @@ class NodeDeviceList(APIView):
 
 class NodeSyncView(APIView):
     def get(self, request):
-        dump_file = os.path.join('dumps', 'server_dump.json')
+        files = (
+            os.path.join('dumps', 'staff_dump.json'),
+            os.path.join('dumps', 'student_dump.json'),
+            os.path.join('dumps', 'student_course.json'),
+        )
 
-        # dump the data in a file
-        output = open(dump_file, 'w')  # Point stdout at a file for dumping data to.
-        call_command('dumpdata', 'db', exclude=EXCLUDED_TABLES, format='json', stdout=output)
-        output.close()
+        db = (
+            "db.staff",
+            "db.student",
+            "db.course",
+        )
 
-        output = open(dump_file)  # reading the dumped data
-        response_data = json.load(output)
-        output.close()
+        # Staff filter
+        with open(files[0], 'w') as output:
+            call_command("dump_object", db[0], [i.pk for i in Staff.objects.filter(is_exam_officer=False)],
+                         stdout=output)
 
-        # cleaning up temp_files for security and space conservation
-        os.remove(dump_file)
-        return Response(response_data)
+        # Student filter
+        with open(files[1], 'w') as output:
+            call_command("dump_object", db[1], [i.pk for i in Student.objects.filter(is_active=True)],
+                         stdout=output)
+        # course filter
+        with open(files[2], 'w') as output:
+            call_command("dump_object", db[2], [i.pk for i in Course.objects.all()],
+                         stdout=output)
+
+        # merge json files while removing duplicate values
+        output = []
+        seen = set()
+
+        for f in files:
+            f = open(f)
+            data = json.loads(f.read())
+            for obj in data:
+                key = '%s|%s' % (obj['model'], obj['pk'])
+                if key not in seen:
+                    seen.add(key)
+                    output.append(obj)
+            f.close()
+
+        return Response(output)

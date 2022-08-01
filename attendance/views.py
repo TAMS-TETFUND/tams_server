@@ -8,11 +8,15 @@ from django.contrib.auth.decorators import login_required
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from rest_framework import status
+
+from attendance.serializer import AttendanceRecordSerializer, AttendanceSessionSerializer
+from nodedevice.auth import NodeTokenAuth
+
 from db.models import (
     AttendanceRecord,
     AttendanceSession,
 )
-from attendance.serializers import AttendanceSessionSerializer
 
 
 def download_attendance(request, pk):
@@ -84,11 +88,19 @@ def download_attendance(request, pk):
 
 class AttendanceSessionList(APIView):
     """Lists all attendance sessions belonging to user making request"""
+    authentication_classes = (NodeTokenAuth, )
 
     def get(self, request, format=None):
         attendance_sessions = AttendanceSession.objects.filter(initiator_id=request.user.id)
         serializer = AttendanceSessionSerializer(attendance_sessions, many=True)
         return Response(serializer.data)
+    
+    def post(self, request):
+        serializer = AttendanceSessionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AttendanceSessionByCourseList(APIView):
@@ -108,4 +120,26 @@ class AttendanceSessionByCourseList(APIView):
 
         serializer = AttendanceSessionSerializer(all_attendance_sessions, many=True)
         return Response(serializer.data)
+
+
+
+
+class AttendanceList(APIView):
+    authentication_classes = (NodeTokenAuth, )
+    """List all students, or create a new student."""
+
+    def get(self, request):
+        attendance_record = AttendanceRecord.objects.all()
+        serializer = AttendanceRecordSerializer(attendance_record, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = AttendanceRecordSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
 
