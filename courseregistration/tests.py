@@ -7,7 +7,7 @@ from db.models import (
     CourseRegistration,
     Department,
     Faculty,
-    Semester,
+    SemesterChoices,
     Student,
 )
 from courseregistration.views import (

@@ -10,15 +10,21 @@
             <div class="collapse navbar-collapse" id="navmenu">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                      <router-link class="nav-link a" to="/home">Dashboard</router-link>
+                      <router-link class="nav-link a" to="/">Dashboard</router-link>
                     </li>
                     <li class="nav-item">
-                      <router-link class="nav-link a" to="/home">Attendance Records</router-link>
+                      <router-link class="nav-link a" to="/attendance">Attendance Records</router-link>
+                    </li>
+                    <li class="nav-item">
+                      <router-link class="nav-link a" to="/attendance/by-course">Attendance By Course</router-link>
+                    </li>
+                    <li class="nav-item">
+                      <router-link class="nav-link a" to="/draggable">Draggable Demo</router-link>
                     </li>
 
                     <template v-if="$store.state.isAuthenticated">
                     <li class="nav-item">
-                      <router-link class="nav-link a" to="/profile">Profile</router-link>
+                      <router-link class="nav-link a" to="/">Profile</router-link>
                     </li>
                     <li class="nav-item">
                       <button class=" btn btn-dark nav-link a" @click="logout()">Log out</button>

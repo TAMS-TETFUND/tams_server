@@ -32,6 +32,7 @@ SECRET_KEY = cred_dict["credentials"]["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# DEBUG = False
 
 ALLOWED_HOSTS = ["192.168.43.243", "localhost", "127.0.0.1", ]
 
@@ -54,20 +55,25 @@ INSTALLED_APPS = [
     "nodedevice",
     "djoser",
     "upload",
+    "home",
     "corsheaders",
     "rest_framework.authtoken",
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://192.168.43.243:8000",
+    "http://192.168.43.243:8080",
     "http://localhost:3000",
+    "http://localhost:8080",
     "http://localhost:8000",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
+    
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -98,6 +104,7 @@ TEMPLATES = [
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.TokenAuthentication",
+        # "rest_framework.authentication.SessionAuthentication",
     ),
 }
 
@@ -128,12 +135,16 @@ AUTH_PASSWORD_VALIDATORS = [
 # use custom user model
 AUTH_USER_MODEL = "db.AppUser"
 
+#redirect to home url
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Africa/Lagos"
 
 USE_I18N = True
 
@@ -144,7 +155,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-STATICFILES_DIR = [
+STATICFILES_DIRS = [
     STATIC_DIR,
 ]
 # Default primary key field type

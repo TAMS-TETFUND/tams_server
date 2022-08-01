@@ -1,0 +1,35 @@
+===================================project's big tasks========================================================
+    = camera issue - implementing threading significantly improved performance: (may also look at multiprocessing)
+    = on-screen keypad  - done
+    = fingerprint test : catch exception blocking the gui when fprint scanner is not connected -done
+    = node device hotspot implementation to enable users download attendance immediately
+    = keypad feature implementation
+    = attendance sign-out feature for events
+    = csv preparation for populating db tables
+    = server frontend
+    = project security & logging
+    = communication layer implementation
+    = data synching
+    = testing the face-recognition feature in different lighting to ascertain optimal conditions for 
+        its usage. There is a jitter attribute capture of the registration image that could be tweaked
+        to see if the accuracy of the feature will improve in different lighting conditions.
+==================issues=====================================================================
+    = the network setup window on the node device assumes that a keyboard is available
+        on the node device. There maybe need to implement a compact keypad with  all characters
+        available.
+=====================server frontend=========================================================
+Features:
+= attendance list generation on a per class, per department, per faculty basis.
+
+=============================
+If analytics for course attendance is created, who is allowed to 
+view it?
+    = All staff in the department?
+    = All staff that are assigned to teach the course?
+    = There should be a per-session course allocation model that
+        maintains the allocation of courses to staff.
+    = An exam officer should have access to the attendance metric
+    = There should be a collated attendance sheet that breaks down all
+        attendance for a particular course (Total number of lectures
+        in a given session and how many each student attended with 
+        the percentage attendance percentage)
