@@ -4,14 +4,12 @@ import os
 from django.core.management import call_command
 from django.core.wsgi import get_wsgi_application
 from django.http import Http404, JsonResponse
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
 from db.models import NodeDevice, Student, Staff, Course
-from db.datasynch import dump_data, EXCLUDED_TABLES
+from db.datasynch import dump_data
 from nodedevice.auth import NodeTokenAuth
 from nodedevice.serializers import NodeDeviceSerializer
 
@@ -79,7 +77,13 @@ class NodeDeviceList(APIView):
         serializer = NodeDeviceSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            node = NodeDevice.objects.get(id=int(serializer.data['id']))
+            response = {
+                "id": node.id,
+                "token": node.token,
+            }
+
+            return Response(response, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
