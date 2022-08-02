@@ -22,7 +22,7 @@ def download_attendance(request, pk):
         attendance_session.initiator is None
         or attendance_session.initiator.username != request.user.username
     ):
-        return HttpResponseForbidden("403: Permission Denied")
+        return HttpResponseForbidden("403: Permission Denied %s here"%request.user.username)
 
     qs = (
         AttendanceRecord.objects.filter(
@@ -86,7 +86,7 @@ class AttendanceSessionList(APIView):
     """Lists all attendance sessions belonging to user making request"""
 
     def get(self, request, format=None):
-        attendance_sessions = AttendanceSession.objects.filter(initiator_id=request.user.id)
+        attendance_sessions = AttendanceSession.objects.filter(initiator_id=request.user.username)
         serializer = AttendanceSessionSerializer(attendance_sessions, many=True)
         return Response(serializer.data)
 
@@ -96,7 +96,7 @@ class AttendanceSessionByCourseList(APIView):
         ever initiated an attendance for.
     """
     def get(self, request, format=None):
-        courses_by_sessions = list(AttendanceSession.objects.filter(initiator_id=request.user.id).values("course", "session").distinct())
+        courses_by_sessions = list(AttendanceSession.objects.filter(initiator_id=request.user.username).values("course", "session").distinct())
         qs = []
         for course in courses_by_sessions:
             qs.append(AttendanceSession.objects.exclude(initiator__isnull=True).filter(**course))
