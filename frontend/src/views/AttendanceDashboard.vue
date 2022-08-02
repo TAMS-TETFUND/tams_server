@@ -1,15 +1,12 @@
 <template>
     <section>
-        <h3 class="mx-auto mb-3">Attendance Records</h3>
-        <div class="wx-50" v-if="apiFetchFail">
-            <div class="alert alert-danger d-flex align-items-center" role="alert">
-                <p class="lead"><BIconExclamationTriangle class="h2 mx-2" />Something went wrong</p>
-            </div>
-        </div>
+        <h3 class="mx-auto mb-5 text-center">Attendance Records</h3>
+        <div v-if="apiFetchFail"><ErrorDisplay errors="Something went wrong" /></div>
         <template v-if="attendance_sessions">
             <table class="table table-dark table-striped text-light">
                 <thead>
                     <tr>
+                        <th scope="col">Session</th>
                         <th scope="col">Course</th>
                         <th scope="col">Event Type</th>
                         <th scope="col">Start Time</th>
@@ -19,6 +16,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="session in attendance_sessions" v-bind:key="session.id">
+                        <td>{{ session.session.session }}</td>
                         <td><a v-bind:href="urlBase + session.id">{{ session.course.code }}: {{ session.course.title }}</a></td>
                         <td>{{ session.event_type_detail }}</td>
                         <td>{{ session.start_time }}</td>
@@ -28,38 +26,20 @@
                 </tbody>
             </table>
         </template>
-
         <template v-else>
-            <table class="table table-dark table-striped text-light">
-                <thead>
-                    <tr class="placeholder-glow">
-                        <th scope="col"><span class="placeholder col-8"></span></th>
-                        <th scope="col"><span class="placeholder col-8"></span></th>
-                        <th scope="col"><span class="placeholder col-8"></span></th>
-                        <th scope="col"><span class="placeholder col-8"></span></th>
-                        <th scope="col"><span class="placeholder col-8"></span></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="placeholder-glow" v-for="row in 5" v-bind:key="row">
-                        <th scope="row"><span class="placeholder col-8"></span></th>
-                        <td><span class="placeholder col-8"></span></td>
-                        <td><span class="placeholder col-8"></span></td>
-                        <td><span class="placeholder col-8"></span></td>
-                        <td><span class="placeholder col-8"></span></td>
-                    </tr>
-                </tbody>
-            </table>
+            <TableSkeleton cols="6" rows="7" />
         </template>
     </section>
 </template>
 
 <script>
 import axios from 'axios'
-import { BIconExclamationTriangle } from 'bootstrap-icons-vue'
+import ErrorDisplay from '../components/ErrorDisplay.vue'
+import TableSkeleton from '../components/TableSkeleton.vue'
 export default {
     components: {
-        BIconExclamationTriangle
+        ErrorDisplay,
+        TableSkeleton
     },
     data() {
         return{
@@ -79,6 +59,7 @@ export default {
             headers: {Authorization: 'Token ' + this.$store.state.token}
         })
         .then(response =>{
+            console.log(response.data)
             this.attendance_sessions = response.data
         })
         .catch(error => {

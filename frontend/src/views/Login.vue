@@ -1,41 +1,47 @@
 <template>
     <div class="log-in-page p-3 rounded-3">
-        <div v-if="submitting">
-            <div class="spinner-grow text-success" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>            
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8 border border-success p-5">
+                <h2 class="pb-4 text-center">Login</h2>
+                <LoadingAnimation :visible="false" />
+                <ErrorDisplay :errors="errorMessage" />
+                <form @submit.prevent="submitForm">
+                    <div class="row mb-3">
+                        <label for="Staff Number" class="col-sm-3 col-form-label">Staff Number</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" :class="{'opacity-50': submitting}" v-model="username" required="required" :disabled="submitting" />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="password" class="col-sm-3 col-form-label">Password</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" :class="{'opacity-50': submitting}" v-model="password" required="required" :disabled="submitting" />
+                        </div>
+                        
+                    </div>
+                    <div class="col d-flex justify-content-end">
+                        <button class="btn btn-success btn-lg mt-3" type="submit" :disabled="submitting"><BIconBoxArrowInRight class="mx-1" />Log In</button>
+                    </div>
+                    
+                </form>
+            </div>
+            <div class="col-2"></div>
         </div>
-        <form @submit.prevent="submitForm">
-            <h3 class="pb-4">Login</h3>
-            <div class="card bg-secondary bg-opacity-25 text-danger lead" v-if="errors"><b>
-                <div class="card-body">
-                    <p v-for="error in errors" v-bind:key="error" class="">
-                        {{error.includes(":") ? error.split(":")[1] : error}}
-                    </p>    
-                </div>
-            </b>
-            </div>
-            <div class="mb-3">
-                <label for="Staff Number" class="col-form-label">Staff Number</label>
-                <input type="text" class="form-control" v-model="username" required="required" :disabled="submitting" />
-            </div>
-            <div class="mb-3">
-                <label for="password" class="col-form-label">Password</label>
-                <input type="password" class="form-control" v-model="password" required="required" :disabled="submitting">
-            </div>
-            <button class="btn btn-success" type="submit" :disabled="submitting"><BIconBoxArrowInRight />Log In</button>
-        </form>
-
     </div>
 </template>
 
 <script>
 import axios from 'axios'
+import ErrorDisplay from '../components/ErrorDisplay.vue'
+import LoadingAnimation from '../components/LoadingAnimation.vue'
 import { BIconBoxArrowInRight } from 'bootstrap-icons-vue'
 export default {
     name: 'LogIn',
     components: {
-        BIconBoxArrowInRight
+        BIconBoxArrowInRight,
+        ErrorDisplay,
+        LoadingAnimation
     },
     data() {
         return {
@@ -48,6 +54,17 @@ export default {
     },
     mounted() {
         document.title = this.$route.name + ' | TAMS'
+    },
+    computed: {
+        errorMessage() {
+            if (this.errors){
+                let message = ''
+                for(let err in this.errors){
+                    message += this.errors[err].includes(':') ? this.errors[err].split(':')[1] : this.errors[err]
+                }
+                return message
+            }else{ return null}
+        }
     },
     methods: {
         async submitForm() {
@@ -74,6 +91,7 @@ export default {
                             Authorization: 'Token ' + token
                         }
                     }).then(response => {
+                        console.log(response.data)
                         localStorage.setItem("username", response.data.username)
                         localStorage.setItem("userId", response.data.id)
                         localStorage.setItem("email", response.data.email)

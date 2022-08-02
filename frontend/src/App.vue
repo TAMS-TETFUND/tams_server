@@ -1,6 +1,6 @@
 <template>
 <body class="bg-dark text-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-gradient py-3 fixed-top border-bottom border-secondary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-3 fixed-top border-bottom border-secondary">
         <div class="container-fluid mx-3">
             <router-link class="navbar-brand" to="/">TAMS</router-link>    
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -38,9 +38,10 @@
                     </li>
                 </ul>
             </div>
-        </div>
-    </nav>
-    <section class="p-lg-0 text-center text-white">
+        </div> 
+     </nav>        
+    <section class="p-lg-0 text-white">
+
         <div class="container">
             <router-view v-slot="{ Component }">
               <transition name="fade" mode="out-in">

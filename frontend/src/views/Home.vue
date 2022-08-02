@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container text-center">
         <div class="h100 p-5 bg-dark rounded-3">
             <h1>Time and Attendance Management System</h1>
             <button class="btn btn-success">Get Started <BIconArrowRightSquare /></button>
