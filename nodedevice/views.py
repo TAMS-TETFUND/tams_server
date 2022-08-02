@@ -76,31 +76,6 @@ class NodeDeviceList(APIView):
 
 
 class NodeSyncView(APIView):
-<<<<<<< HEAD
-    def get(self, request, device_id, token):
-        dump_file = os.path.join('dumps', 'server_dump.json')
-        try:
-            node_device = NodeDevice.objects.get(id=device_id)
-        except NodeDevice.DoesNotExist:
-            return HttpResponseBadRequest("Node device does not exist")
-        
-        if node_device.token != token:
-            return HttpResponseForbidden("Node Device Authentication Failed")
-
-        # dump the data in a file
-        output = open(dump_file, 'w')  # Point stdout at a file for dumping data to.
-        call_command('dumpdata', 'db', exclude=EXCLUDED_TABLES, format='json', stdout=output)
-        output.close()
-
-        output = open(dump_file)  # reading the dumped data
-        response_data = json.load(output)
-        output.close()
-
-        # cleaning up temp_files for security and space conservation
-        os.remove(dump_file)
-        return Response(response_data)
-
-=======
     def get(self, request):
         files = (
             os.path.join('dumps', 'staff_dump.json'),
@@ -143,4 +118,3 @@ class NodeSyncView(APIView):
             f.close()
 
         return Response(output)
->>>>>>> 556895f1d10beb34bda8ed4334d0d1f3f553f828
