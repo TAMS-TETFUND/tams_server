@@ -76,7 +76,15 @@ class NodeDeviceList(APIView):
 
 
 class NodeSyncView(APIView):
-    def get(self, request):
+    def get(self, request, device_id, token):
+        try:
+            node_device = NodeDevice.objects.get(id=device_id)
+        except NodeDevice.DoesNotExist:
+            return HttpResponseBadRequest("Node device does not exist")
+
+        if node_device.token != token:
+            return HttpResponseForbidden("Node Device Authentication Failed")
+
         files = (
             os.path.join('dumps', 'staff_dump.json'),
             os.path.join('dumps', 'student_dump.json'),
