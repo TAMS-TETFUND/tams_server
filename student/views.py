@@ -5,11 +5,13 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from db.models import Student
+from nodedevice.auth import NodeTokenAuth
 from student.serializers import StudentSerializer
 
 
 class StudentDetail(APIView):
     """Retrieve, update or delete a student instance"""
+    authentication_classes = (NodeTokenAuth,)
 
     def get_object(self, pk):
         try:
@@ -37,6 +39,7 @@ class StudentDetail(APIView):
 
 
 class StudentList(APIView):
+    authentication_classes = (NodeTokenAuth, )
     """List all students, or create a new student."""
 
     def get(self, request, format=None):

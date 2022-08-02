@@ -9,8 +9,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from db.models import NodeDevice
-from db.datasynch import dump_data, EXCLUDED_TABLES
+from db.models import NodeDevice, Student, Staff, Course
+from db.datasynch import dump_data
+from nodedevice.auth import NodeTokenAuth
 from nodedevice.serializers import NodeDeviceSerializer
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tams_server.settings")
@@ -53,6 +54,7 @@ class NodeDeviceDetail(APIView):
 
 class NodeDeviceList(APIView):
     """List all node devices, or create a new node_device."""
+    authentication_classes = (NodeTokenAuth,)
 
     def get(self, request, format=None):
         node_devices = NodeDevice.objects.all()
@@ -63,11 +65,18 @@ class NodeDeviceList(APIView):
         serializer = NodeDeviceSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            node = NodeDevice.objects.get(id=int(serializer.data['id']))
+            response = {
+                "id": node.id,
+                "token": node.token,
+            }
+
+            return Response(response, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class NodeSyncView(APIView):
+<<<<<<< HEAD
     def get(self, request, device_id, token):
         dump_file = os.path.join('dumps', 'server_dump.json')
         try:
@@ -91,3 +100,47 @@ class NodeSyncView(APIView):
         os.remove(dump_file)
         return Response(response_data)
 
+=======
+    def get(self, request):
+        files = (
+            os.path.join('dumps', 'staff_dump.json'),
+            os.path.join('dumps', 'student_dump.json'),
+            os.path.join('dumps', 'student_course.json'),
+        )
+
+        db = (
+            "db.staff",
+            "db.student",
+            "db.course",
+        )
+
+        # Staff filter
+        with open(files[0], 'w') as output:
+            call_command("dump_object", db[0], [i.pk for i in Staff.objects.filter(is_exam_officer=False)],
+                         stdout=output)
+
+        # Student filter
+        with open(files[1], 'w') as output:
+            call_command("dump_object", db[1], [i.pk for i in Student.objects.filter(is_active=True)],
+                         stdout=output)
+        # course filter
+        with open(files[2], 'w') as output:
+            call_command("dump_object", db[2], [i.pk for i in Course.objects.all()],
+                         stdout=output)
+
+        # merge json files while removing duplicate values
+        output = []
+        seen = set()
+
+        for f in files:
+            f = open(f)
+            data = json.loads(f.read())
+            for obj in data:
+                key = '%s|%s' % (obj['model'], obj['pk'])
+                if key not in seen:
+                    seen.add(key)
+                    output.append(obj)
+            f.close()
+
+        return Response(output)
+>>>>>>> 556895f1d10beb34bda8ed4334d0d1f3f553f828
