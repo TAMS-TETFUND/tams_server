@@ -39,27 +39,36 @@
                 </ul>
             </div>
         </div> 
-     </nav>        
-    <section class="p-lg-0 text-white">
+     </nav>
+    <div class="row flex-nowrap">
+      <div class="col col-sm-4 col-md-2 col xl-1 px-sm-1 px-0 bg-secondary bg-opacity-25 d-sm-inline">
+        <SideBar />
+      </div>
+      <div class="col py-3">    
+        <section class="text-white">
 
-        <div class="container">
-            <router-view v-slot="{ Component }">
-              <transition name="fade" mode="out-in">
-                <component :is="Component" />
-              </transition>
-            </router-view>
-        </div>
-    </section>
+            <div class="container">
+                <router-view v-slot="{ Component }">
+                  <transition name="fade" mode="out-in">
+                    <component :is="Component" />
+                  </transition>
+                </router-view>
+            </div>
+        </section>
+      </div>
+    </div>
 </body>
 </template>
 
 <script>
 import axios from 'axios'
 import { BIconPersonFill } from 'bootstrap-icons-vue'
+import SideBar from './components/SideBar.vue'
 export default {
   name: 'App',
   components: {
-    BIconPersonFill
+    BIconPersonFill,
+    SideBar
   },
   beforeCreate(){
     this.$store.commit('initializeStore')
@@ -92,7 +101,7 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap');
-.wrapper {
+/* .wrapper {
   color: var(--body);
   font-family: Sora, "san-serif";
   line-height: 1.7;
@@ -120,11 +129,14 @@ export default {
   background-color: rgba(255, 255, 255 , 0.85);
   z-index: -1;
   overflow-y: auto;
-}
+} */
 body::before{
     display: block;
     content: '';
-    height: 60px;
+    height: 35px;
+}
+body{
+    overflow-x: hidden;
 }
 html {
   min-height: 100%;
