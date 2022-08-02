@@ -35,3 +35,23 @@ view it?
         in a given session and how many each student attended with 
         the percentage attendance percentage)
 ======================================
+Student attendance history;
+    =accurate analytics cannot be performed if course registration is not 
+        enforced.
+    =however, student's attendance can be checked with regard to a particular course
+        ; in this case, the number of (valid) attendance sessions recorded will be
+            compared to the number of valid check-ins the student has for that course.
+            could be displayed as a percentage.
+            = the number of invalidated attendance could also be tracked to check for 
+                problematic attitude>
+
+= to bypass relying on course registrations, the system could generate student
+attendance report based on courses for which the student attended at least a single lecture 
+for.
+    = Missed classes can then be calculated for total number of attendance sessions initiated
+        for that course where the student did not have a valid check-in.
+
+Student Attendance Report > Reg Number Search Box > Overview
+=============================================
+course coordinators should have the permission of invalidating/deleting an 
+    attendance session
