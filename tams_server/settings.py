@@ -70,10 +70,8 @@ CORS_ALLOWED_ORIGINS = [
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
-
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -135,9 +133,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # use custom user model
 AUTH_USER_MODEL = "db.AppUser"
 
-#redirect to home url
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+# redirect to home url
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/

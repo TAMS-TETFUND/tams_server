@@ -1,8 +1,13 @@
 from django.urls.conf import path
 
-from attendance.views import AttendanceSessionByCourseList, AttendanceSessionList, StudentAttendanceList, download_attendance
+from attendance.views import (
+    AttendanceSessionByCourseList,
+    AttendanceSessionList,
+    StudentAttendanceList,
+    download_attendance,
+)
 
-app_name="attendance"
+app_name = "attendance"
 
 urlpatterns = [
     path("", AttendanceSessionList.as_view()),

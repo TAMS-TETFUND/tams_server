@@ -4,7 +4,12 @@ import os
 
 from django.core.management import call_command
 from django.core.wsgi import get_wsgi_application
-from django.http import Http404, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
+from django.http import (
+    Http404,
+    HttpResponseBadRequest,
+    HttpResponseForbidden,
+    JsonResponse,
+)
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -54,6 +59,7 @@ class NodeDeviceDetail(APIView):
 
 class NodeDeviceList(APIView):
     """List all node devices, or create a new node_device."""
+
     # authentication_classes = (NodeTokenAuth,)
 
     def get(self, request, format=None):
@@ -65,7 +71,7 @@ class NodeDeviceList(APIView):
         serializer = NodeDeviceSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            node = NodeDevice.objects.get(id=int(serializer.data['id']))
+            node = NodeDevice.objects.get(id=int(serializer.data["id"]))
             response = {
                 "id": node.id,
                 "token": node.token,
@@ -86,9 +92,9 @@ class NodeSyncView(APIView):
             return HttpResponseForbidden("Node Device Authentication Failed")
 
         files = (
-            os.path.join('dumps', 'staff_dump.json'),
-            os.path.join('dumps', 'student_dump.json'),
-            os.path.join('dumps', 'student_course.json'),
+            os.path.join("dumps", "staff_dump.json"),
+            os.path.join("dumps", "student_dump.json"),
+            os.path.join("dumps", "student_course.json"),
         )
 
         db = (
@@ -98,18 +104,30 @@ class NodeSyncView(APIView):
         )
 
         # Staff filter
-        with open(files[0], 'w') as output:
-            call_command("dump_object", db[0], [i.pk for i in Staff.objects.filter(is_exam_officer=False)],
-                         stdout=output)
+        with open(files[0], "w") as output:
+            call_command(
+                "dump_object",
+                db[0],
+                [i.pk for i in Staff.objects.filter(is_exam_officer=False)],
+                stdout=output,
+            )
 
         # Student filter
-        with open(files[1], 'w') as output:
-            call_command("dump_object", db[1], [i.pk for i in Student.objects.filter(is_active=True)],
-                         stdout=output)
+        with open(files[1], "w") as output:
+            call_command(
+                "dump_object",
+                db[1],
+                [i.pk for i in Student.objects.filter(is_active=True)],
+                stdout=output,
+            )
         # course filter
-        with open(files[2], 'w') as output:
-            call_command("dump_object", db[2], [i.pk for i in Course.objects.all()],
-                         stdout=output)
+        with open(files[2], "w") as output:
+            call_command(
+                "dump_object",
+                db[2],
+                [i.pk for i in Course.objects.all()],
+                stdout=output,
+            )
 
         # merge json files while removing duplicate values
         output = []
@@ -119,7 +137,7 @@ class NodeSyncView(APIView):
             f = open(f)
             data = json.loads(f.read())
             for obj in data:
-                key = '%s|%s' % (obj['model'], obj['pk'])
+                key = "%s|%s" % (obj["model"], obj["pk"])
                 if key not in seen:
                     seen.add(key)
                     output.append(obj)

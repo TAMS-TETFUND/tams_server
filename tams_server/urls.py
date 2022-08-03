@@ -28,4 +28,6 @@ urlpatterns = [
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 # including login and logout views for the browsable API.
-urlpatterns += [ path('api-auth/', include('rest_framework.urls')),]
+urlpatterns += [
+    path("api-auth/", include("rest_framework.urls")),
+]

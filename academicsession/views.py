@@ -11,6 +11,7 @@ from nodedevice.auth import NodeTokenAuth
 
 class AcademicSessionDetail(APIView):
     """Retrieve, update or delete a academic_session instance."""
+
     authentication_classes = (NodeTokenAuth,)
 
     def get_object(self, pk):
@@ -42,6 +43,7 @@ class AcademicSessionDetail(APIView):
 
 class AcademicSessionList(APIView):
     """List all academic sessions, or create a new academic_session."""
+
     authentication_classes = (NodeTokenAuth,)
 
     def get(self, request, format=None):
