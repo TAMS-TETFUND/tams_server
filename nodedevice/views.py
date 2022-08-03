@@ -54,7 +54,7 @@ class NodeDeviceDetail(APIView):
 
 class NodeDeviceList(APIView):
     """List all node devices, or create a new node_device."""
-    authentication_classes = (NodeTokenAuth,)
+    # authentication_classes = (NodeTokenAuth,)
 
     def get(self, request, format=None):
         node_devices = NodeDevice.objects.all()
