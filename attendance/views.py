@@ -1,7 +1,7 @@
 import csv
 from datetime import datetime
 
-from django.http import HttpResponse, HttpResponseServerError, HttpResponseForbidden
+from django.http import Http404, HttpResponse, HttpResponseServerError, HttpResponseForbidden
 from django.db.models import Q, F
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -11,11 +11,14 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from attendance.serializer import AttendanceRecordSerializer, AttendanceSessionSerializer
+from course.serializers import CourseSerializer
 from nodedevice.auth import NodeTokenAuth
 
 from db.models import (
     AttendanceRecord,
     AttendanceSession,
+    Course,
+    Student,
 )
 
 
@@ -142,4 +145,47 @@ class AttendanceList(APIView):
     
 
 
+class StudentAttendanceList(APIView):
+    """
+    List all attendance sessions for courses a student attended at 
+    least a lecture for.
+    """
+    def get(self, request, student_id, session=None):
+        try:
+            student = Student.objects.get(pk=student_id)
+        except Student.DoesNotExist:
+            return Http404
 
+        # all the courses student attended a lecture for in every semester
+        student_attended_events_list = list(
+            AttendanceRecord.objects.filter(student=student).values(
+                "attendance_session__course__id", 
+                "attendance_session__session__id"
+            ).distinct()
+        )
+        print("student: ", student.reg_number)
+        print("this is student's attendance list: ", student_attended_events_list)
+        student_attendance_report = []
+
+        for event in student_attended_events_list:
+            item = {}
+
+            item['course'] = CourseSerializer(
+                Course.objects.get(
+                    id=event["attendance_session__course__id"]
+                ), 
+                many=False
+            ).data
+            
+            item['events'] = AttendanceSessionSerializer(
+                AttendanceSession.objects.filter(
+                    session_id=event["attendance_session__session__id"], 
+                    course_id=event["attendance_session__course__id"]
+                ), 
+                many=True
+            ).data
+            
+            item['student_records'] = AttendanceRecordSerializer(AttendanceRecord.objects.filter(student=student, **event), many=True).data
+            student_attendance_report.append(item)
+            print("got here")
+        return Response(student_attendance_report)
