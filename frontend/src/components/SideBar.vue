@@ -3,12 +3,12 @@
         <ul class="nav nav-pill flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
             <li class="nav-item">
                 <router-link class="a nav-link align-middle px-0" to="/attendance">
-                    <BIconFileEarmarkArrowDownFill class="text-success mx-1"/><span class="ms-1 d-none d-sm-inline text-white">Download Attendance</span>
+                    <BIconFileEarmarkArrowDownFill class="text-success mx-1"/><span class="ms-1 d-none d-md-inline text-white">Download Attendance</span>
                 </router-link>
             </li>
             <li>
                 <a href="#reports" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                    <BIconGraphUp class="text-success mx-1" /><span class="text-white d-none d-sm-inline">Reports</span>
+                    <BIconGraphUp class="text-success mx-1" /><span class="text-white d-none d-md-inline">Reports</span>
                 </a>
                 <ul class="collapse nav flex-column ms-1" id="reports" data-bs-parent="#menu">
                     <li class="w-100">

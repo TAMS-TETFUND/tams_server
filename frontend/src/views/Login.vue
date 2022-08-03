@@ -1,8 +1,8 @@
 <template>
     <div class="log-in-page p-3 rounded-3">
         <div class="row">
-            <div class="col-2"></div>
-            <div class="col-8 border border-success p-5">
+            <div class="col d-none d-sm-block"></div>
+            <div class="col-xl-8 bg-secondary bg-opacity-25 border border-success p-5 mt-5">
                 <h2 class="pb-4 text-center">Login</h2>
                 <LoadingAnimation :visible="false" />
                 <ErrorDisplay :errors="errorMessage" />
@@ -26,7 +26,7 @@
                     
                 </form>
             </div>
-            <div class="col-2"></div>
+            <div class="col d-none d-sm-block"></div>
         </div>
     </div>
 </template>

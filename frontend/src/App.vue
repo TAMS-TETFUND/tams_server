@@ -41,7 +41,7 @@
         </div> 
      </nav>
     <div class="row flex-nowrap">
-      <div class="col col-sm-4 col-md-2 col xl-1 px-sm-1 px-0 bg-secondary bg-opacity-25 d-sm-inline">
+      <div class="col col-sm-1 col-md-3 col-xl-2 px-sm-1 px-0 bg-secondary bg-opacity-25 d-none d-sm-inline">
         <SideBar />
       </div>
       <div class="col py-3">    
