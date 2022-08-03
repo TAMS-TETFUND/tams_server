@@ -14,6 +14,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from rest_framework import status
+from academicsession.serializers import AcademicSessionSerializer
 
 from attendance.serializer import (
     AttendanceRecordSerializer,
@@ -23,6 +24,7 @@ from course.serializers import CourseSerializer
 from nodedevice.auth import NodeTokenAuth
 
 from db.models import (
+    AcademicSession,
     AttendanceRecord,
     AttendanceSession,
     Course,
@@ -195,7 +197,7 @@ class StudentAttendanceList(APIView):
 
         for event in student_attended_events_list:
             item = {}
-
+            item["academic_session"] = AcademicSessionSerializer(AcademicSession.objects.get(id=event["attendance_session__session__id"]), many=False).data
             item["course"] = CourseSerializer(
                 Course.objects.get(id=event["attendance_session__course__id"]),
                 many=False,
