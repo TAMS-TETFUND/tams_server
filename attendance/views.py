@@ -104,7 +104,7 @@ def download_attendance(request, pk):
 class AttendanceSessionList(APIView):
     """Lists all attendance sessions belonging to user making request"""
 
-    authentication_classes = (NodeTokenAuth,)
+    # authentication_classes = (NodeTokenAuth,)
 
     def get(self, request, format=None):
         attendance_sessions = AttendanceSession.objects.filter(
@@ -152,7 +152,7 @@ class AttendanceSessionByCourseList(APIView):
 
 
 class AttendanceList(APIView):
-    authentication_classes = (NodeTokenAuth,)
+    # authentication_classes = (NodeTokenAuth,)
     """List all students, or create a new student."""
 
     def get(self, request):
