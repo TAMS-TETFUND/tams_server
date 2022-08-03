@@ -12,7 +12,7 @@
                 </a>
                 <ul class="collapse nav flex-column ms-1" id="reports" data-bs-parent="#menu">
                     <li class="w-100">
-                        <router-link class="a nav-link" to="/"><span class="d-none d-sm-inline text-white">> Student</span></router-link>
+                        <router-link class="a nav-link" to="/attendance/student-report/"><span class="d-none d-sm-inline text-white">> Student</span></router-link>
                     </li>
                     <li class="w-100">
                         <router-link class="a nav-link" to="/attendance/by-course"><span class="d-none d-sm-inline text-white">> Course</span></router-link>

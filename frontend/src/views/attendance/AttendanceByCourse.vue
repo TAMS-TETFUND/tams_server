@@ -39,8 +39,8 @@
 
 <script>
 import axios from 'axios'
-import ErrorDisplay from '../components/ErrorDisplay.vue'
-import TableSkeleton from '../components/TableSkeleton.vue'
+import ErrorDisplay from '../../components/ErrorDisplay.vue'
+import TableSkeleton from '../../components/TableSkeleton.vue'
 export default {
     data() {
         return{

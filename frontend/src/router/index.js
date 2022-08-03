@@ -3,9 +3,10 @@ import { createWebHistory, createRouter } from "vue-router"
 import Home from "@/views/Home.vue"
 import Login from "@/views/Login.vue"
 import PageNotFound from "@/views/PageNotFound.vue"
-import AttendanceDashboard from "@/views/AttendanceDashboard.vue"
-import AttendanceByCourse from "@/views/AttendanceByCourse.vue"
-import StudentAttendanceReport from "@/views/StudentAttendanceReport.vue"
+import AttendanceDashboard from "@/views/attendance/AttendanceDashboard.vue"
+import AttendanceByCourse from "@/views/attendance/AttendanceByCourse.vue"
+import StudentAttendanceReport from "@/views/attendance/StudentAttendanceReport.vue"
+import StudentReportSearch from "@/views/attendance/StudentReportSearch.vue"
 import DraggableDemo from "@/views/DraggableDemo.vue"
 import store from "../store"
 import NProgress from "nprogress"
@@ -39,7 +40,15 @@ const routes = [
             requireLogin: true
         }
     },
+    {
+        path: "/attendance/student-report/",
+        name: "StudentReportSearch",
+        component: StudentReportSearch,
 
+        meta: {
+            requireLogin: true
+        }
+    },
     {
         path: "/attendance/student-report/:id(.*)",
         name: "StudentAttendanceReport",

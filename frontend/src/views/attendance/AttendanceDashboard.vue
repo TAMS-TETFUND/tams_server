@@ -34,8 +34,8 @@
 
 <script>
 import axios from 'axios'
-import ErrorDisplay from '../components/ErrorDisplay.vue'
-import TableSkeleton from '../components/TableSkeleton.vue'
+import ErrorDisplay from '../../components/ErrorDisplay.vue'
+import TableSkeleton from '../../components/TableSkeleton.vue'
 export default {
     components: {
         ErrorDisplay,
@@ -45,7 +45,7 @@ export default {
         return{
             attendance_sessions: null,
             urlBase: axios.defaults.baseURL + '/api/v1/attendance/session/',
-            errors: null,
+            errors: [],
             apiFetchFail: false,
             currentRoute: []
         }
