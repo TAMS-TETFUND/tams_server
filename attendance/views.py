@@ -8,20 +8,19 @@ from django.http import (
     HttpResponseForbidden,
 )
 from django.db.models import Q, F
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 from rest_framework import status
 from academicsession.serializers import AcademicSessionSerializer
 
-from attendance.serializer import (
+from attendance.serializers import (
     AttendanceRecordSerializer,
     AttendanceSessionSerializer,
 )
 from course.serializers import CourseSerializer
-from nodedevice.auth import NodeTokenAuth
 
 from db.models import (
     AcademicSession,
@@ -101,24 +100,19 @@ def download_attendance(request, pk):
     return response
 
 
-class AttendanceSessionList(APIView):
+class AttendanceSessionPagination(PageNumberPagination):
+    page_size = 10
+
+
+class AttendanceSessionList(generics.ListCreateAPIView):
     """Lists all attendance sessions belonging to user making request"""
-
-    # authentication_classes = (NodeTokenAuth,)
-
-    def get(self, request, format=None):
-        attendance_sessions = AttendanceSession.objects.filter(
-            initiator_id=request.user.username
-        )
-        serializer = AttendanceSessionSerializer(attendance_sessions, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = AttendanceSessionSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    ordering_fields = ['session__session', 'course']
+    pagination_class = AttendanceSessionPagination
+    serializer_class = AttendanceSessionSerializer
+    
+    def get_queryset(self):
+        sessions_with_records = set(AttendanceRecord.objects.values_list("attendance_session", flat=True))
+        return AttendanceSession.objects.filter(initiator__isnull=False, id__in=sessions_with_records, initiator_id=self.request.user.username)
 
 
 class AttendanceSessionByCourseList(APIView):
