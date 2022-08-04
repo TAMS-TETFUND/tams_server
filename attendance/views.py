@@ -46,7 +46,7 @@ def download_attendance(request, pk):
         AttendanceRecord.objects.filter(
             Q(
                 Q(attendance_session=attendance_session)
-                & Q(attendance_session__initiator=request.user)
+                & Q(attendance_session__initiator_id=request.user.username)
             )
         )
         .prefetch_related("student")
@@ -101,7 +101,7 @@ def download_attendance(request, pk):
 
 
 class AttendanceSessionPagination(PageNumberPagination):
-    page_size = 10
+    page_size = 15
 
 
 class AttendanceSessionList(generics.ListCreateAPIView):
@@ -124,14 +124,17 @@ class AttendanceSessionList(generics.ListCreateAPIView):
         )
 
 
-class AttendanceSessionByCourseList(APIView):
+class AttendanceSessionByCourseList(generics.ListAPIView):
     """Lists all attendance sessions for a course the user making request has
     ever initiated an attendance for.
     """
+    pagination_class = AttendanceSessionPagination
+    serializer_class = AttendanceSessionSerializer
 
-    def get(self, request, format=None):
+    def get_queryset(self):
+        sessions_with_records = set(AttendanceRecord.objects.values_list("attendance_session", flat=True))
         courses_by_sessions = list(
-            AttendanceSession.objects.filter(initiator_id=request.user.username)
+            AttendanceSession.objects.filter(id__in=sessions_with_records, initiator_id=self.request.user.username)
             .values("course", "session")
             .distinct()
         )
@@ -147,11 +150,7 @@ class AttendanceSessionByCourseList(APIView):
         all_attendance_sessions = None
         if qs:
             all_attendance_sessions = qs[0].union(*qs[1:])
-
-        serializer = AttendanceSessionSerializer(
-            all_attendance_sessions, many=True
-        )
-        return Response(serializer.data)
+        return all_attendance_sessions
 
 
 class AttendanceList(APIView):
