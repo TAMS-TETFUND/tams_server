@@ -106,13 +106,22 @@ class AttendanceSessionPagination(PageNumberPagination):
 
 class AttendanceSessionList(generics.ListCreateAPIView):
     """Lists all attendance sessions belonging to user making request"""
-    ordering_fields = ['session__session', 'course']
+
+    ordering_fields = ["session__session", "course"]
     pagination_class = AttendanceSessionPagination
     serializer_class = AttendanceSessionSerializer
-    
+
     def get_queryset(self):
-        sessions_with_records = set(AttendanceRecord.objects.values_list("attendance_session", flat=True))
-        return AttendanceSession.objects.filter(initiator__isnull=False, id__in=sessions_with_records, initiator_id=self.request.user.username)
+        sessions_with_records = set(
+            AttendanceRecord.objects.values_list(
+                "attendance_session", flat=True
+            )
+        )
+        return AttendanceSession.objects.filter(
+            initiator__isnull=False,
+            id__in=sessions_with_records,
+            initiator_id=self.request.user.username,
+        )
 
 
 class AttendanceSessionByCourseList(APIView):
@@ -191,7 +200,12 @@ class StudentAttendanceList(APIView):
 
         for event in student_attended_events_list:
             item = {}
-            item["academic_session"] = AcademicSessionSerializer(AcademicSession.objects.get(id=event["attendance_session__session__id"]), many=False).data
+            item["academic_session"] = AcademicSessionSerializer(
+                AcademicSession.objects.get(
+                    id=event["attendance_session__session__id"]
+                ),
+                many=False,
+            ).data
             item["course"] = CourseSerializer(
                 Course.objects.get(id=event["attendance_session__course__id"]),
                 many=False,
