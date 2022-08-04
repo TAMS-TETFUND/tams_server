@@ -1,6 +1,6 @@
 <template>
     <section>
-        <h3 class="mx-auto mb-5 text-center">Attendance Records</h3>
+        <h3 class="mx-auto mb-5 mt-3 text-center">Attendance Records</h3>
         <div v-if="apiFetchFail"><ErrorDisplay errors="Something went wrong" /></div>
         <template v-if="attendance_sessions">
             <table class="table table-dark table-striped text-light">
@@ -15,7 +15,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="session in attendance_sessions" v-bind:key="session.id">
+                    <tr v-for="session in attendance_sessions.results" v-bind:key="session.id">
                         <td>{{ session.session.session }}</td>
                         <td><a v-bind:href="urlBase + session.id">{{ session.course.code }}: {{ session.course.title }}</a></td>
                         <td>{{ session.event_type_detail }}</td>
@@ -25,6 +25,10 @@
                     </tr>
                 </tbody>
             </table>
+            <div>
+                <Button type="button" class="btn btn-success btn-md" @click="loadPreviousPage()" v-if="attendance_sessions.previous">Previous</Button>
+                <Button type="button" class="btn btn-success btn-md" @click="loadNextPage()" v-if="attendance_sessions.next">Next</Button>
+            </div>
         </template>
         <template v-else>
             <TableSkeleton cols="6" rows="7" />
@@ -47,15 +51,20 @@ export default {
             urlBase: axios.defaults.baseURL + '/api/v1/attendance/session/',
             errors: [],
             apiFetchFail: false,
-            currentRoute: []
+            currentRoute: [],
+            currentPage: 1,
         }
     },
     created(){
         this.currentRoute = window.location.pathname.split("/")
     },
-    async mounted(){
+    mounted(){
+        this.fetchAttendanceSessions()
+    },
+    methods: {
+        async fetchAttendanceSessions(){
         await axios
-        .get(`/api/v1/attendance/`, {
+        .get(`/api/v1/attendance/?page=${this.currentPage}`, {
             headers: {Authorization: 'Token ' + this.$store.state.token}
         })
         .then(response =>{
@@ -66,6 +75,15 @@ export default {
             this.apiFetchFail = true
             this.errors.push(error)
         }) 
-    },
+        },
+        loadNextPage(){
+            this.currentPage += 1
+            this.fetchAttendanceSessions()
+        },
+        loadPreviousPage(){
+            this.currentPage -= 1
+            this.fetchAttendanceSessions()
+        }
+    }
 }
 </script>
