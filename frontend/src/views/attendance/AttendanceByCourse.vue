@@ -1,9 +1,9 @@
 <template>
     <section>
-        <h3 class="mx-auto mb-5 text-center">Attendance Records: By Courses</h3>
+        <h3 class="mx-auto mb-5 mt-3 text-center">Attendance Records: By Courses</h3>
 
         <div v-if="apiFetchFail"><ErrorDisplay errors="Something went wrong" /></div>
-        <template v-if="sessions_breakdown">
+        <template v-if="sessions_breakdown && dataReady">
             <table class="table table-dark table-striped text-light">
                 <thead>
                     <tr>
@@ -29,6 +29,10 @@
                     </tr>
                 </tbody>
             </table>
+            <div>
+                <Button type="button" class="btn btn-success btn-md mx-3" @click="loadPreviousPage()" v-if="hasPrev">Previous</Button>
+                <Button type="button" class="btn btn-success btn-md" @click="loadNextPage()" v-if="hasNext">Next</Button>
+            </div>
         </template >
         <TableSkeleton  rows="7" cols="6" v-else />
         <template>
@@ -44,9 +48,12 @@ import TableSkeleton from '../../components/TableSkeleton.vue'
 export default {
     data() {
         return{
-            attendance_sessions: null,
             apiFetchFail: false,
-            sessions_breakdown: []
+            dataReady: null,
+            sessions_breakdown: [],
+            hasNext: null,
+            hasPrev: null,
+            currentPage: 1,
         }
     },
     components: {
@@ -54,16 +61,25 @@ export default {
         TableSkeleton
     },
     async mounted(){
+        this.processAttendanceSession()
+    },
+    methods: {
+        async processAttendanceSession(){
+            this.dataReady = false
         await axios
-        .get(`/api/v1/attendance/by-course/`, {
+        .get(`/api/v1/attendance/by-course/?page=${this.currentPage}`, {
             headers: {Authorization: 'Token ' + this.$store.state.token}
         })
         .then(response =>{
+            this.sessions_breakdown = []
+            this.hasNext = response.data.next
+            this.hasPrev = response.data.previous
             let courseList = []
             let initiatorList = []
-            for (let i in response.data){
-                courseList.push([response.data[i].course.code, response.data[i].session.session])
-                initiatorList.push(response.data[i].initiator)
+            let responseData = response.data.results
+            for (let i in responseData){
+                courseList.push([responseData[i].course.code, responseData[i].session.session])
+                initiatorList.push(responseData[i].initiator)
             }
             const uniqueCourseList = courseList.filter((value, index) => {
                 const _value = JSON.stringify(value);
@@ -84,15 +100,15 @@ export default {
                 lectureAndLabsCount = 0 
                 ExamCount = 0
                 QuizCount = 0
-                for ( let y in response.data){
-                    if (response.data[y].course.code == uniqueCourseList[x][0] && response.data[y].session.session == uniqueCourseList[x][1]){
-                        if (response.data[y].event_type_detail == "Lecture" || response.data[y].event_type_detail == "Lab"){
+                for ( let y in responseData){
+                    if (responseData[y].course.code == uniqueCourseList[x][0] && responseData[y].session.session == uniqueCourseList[x][1]){
+                        if (responseData[y].event_type_detail == "Lecture" || responseData[y].event_type_detail == "Lab"){
                             lectureAndLabsCount = lectureAndLabsCount + 1
                         }
-                        if (response.data[y].event_type_detail == "Examination"){
+                        if (responseData[y].event_type_detail == "Examination"){
                             ExamCount = ExamCount + 1
                         }
-                        if (response.data[y].event_type_detail == "Quiz"){
+                        if (responseData[y].event_type_detail == "Quiz"){
                             QuizCount = QuizCount + 1
                         }
                     }
@@ -107,8 +123,18 @@ export default {
                 })
 
             }
+            this.dataReady = true
         })
         
-    },
+        },
+        loadNextPage(){
+            this.currentPage += 1
+            this.processAttendanceSession()
+        },
+        loadPreviousPage(){
+            this.currentPage -= 1
+            this.processAttendanceSession()
+        }
+    }
 }
 </script>

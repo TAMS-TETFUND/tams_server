@@ -26,7 +26,7 @@
                 </tbody>
             </table>
             <div>
-                <Button type="button" class="btn btn-success btn-md" @click="loadPreviousPage()" v-if="attendance_sessions.previous">Previous</Button>
+                <Button type="button" class="btn btn-success btn-md mx-3" @click="loadPreviousPage()" v-if="attendance_sessions.previous">Previous</Button>
                 <Button type="button" class="btn btn-success btn-md" @click="loadNextPage()" v-if="attendance_sessions.next">Next</Button>
             </div>
         </template>

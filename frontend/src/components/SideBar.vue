@@ -12,10 +12,10 @@
                 </a>
                 <ul class="collapse nav flex-column ms-1" id="reports" data-bs-parent="#menu">
                     <li class="w-100">
-                        <router-link class="a nav-link" to="/attendance/student-report/"><span class="d-none d-sm-inline text-white">> Student</span></router-link>
+                        <router-link class="a nav-link" to="/attendance/student-report/"><BIconFileEarmarkPerson class="text-success mx-1" /><span class="d-none d-md-inline text-white">Student</span></router-link>
                     </li>
                     <li class="w-100">
-                        <router-link class="a nav-link" to="/attendance/by-course"><span class="d-none d-sm-inline text-white">> Course</span></router-link>
+                        <router-link class="a nav-link" to="/attendance/by-course"><BIconCollectionFill class="text-success mx-1" /><span class="d-none d-md-inline text-white">Course</span></router-link>
                     </li>
                 </ul>
             </li>
@@ -26,9 +26,11 @@
 </template>
 
 <script>
-import { BIconFileEarmarkArrowDownFill, BIconGraphUp } from "bootstrap-icons-vue";
+import { BIconCollectionFill, BIconFileEarmarkPerson, BIconFileEarmarkArrowDownFill, BIconGraphUp } from "bootstrap-icons-vue";
 export default {
     components: {
+        BIconCollectionFill,
+        BIconFileEarmarkPerson,
         BIconFileEarmarkArrowDownFill,
         BIconGraphUp
     }
