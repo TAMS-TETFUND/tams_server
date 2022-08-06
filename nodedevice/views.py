@@ -60,8 +60,6 @@ class NodeDeviceDetail(APIView):
 class NodeDeviceList(APIView):
     """List all node devices, or create a new node_device."""
 
-    # authentication_classes = (NodeTokenAuth,)
-
     def get(self, request, format=None):
         node_devices = NodeDevice.objects.all()
         serializer = NodeDeviceSerializer(node_devices, many=True)
@@ -82,15 +80,7 @@ class NodeDeviceList(APIView):
 
 
 class NodeSyncView(APIView):
-    def get(self, request, device_id, token):
-        try:
-            node_device = NodeDevice.objects.get(id=device_id)
-        except NodeDevice.DoesNotExist:
-            return HttpResponseBadRequest("Node device does not exist")
-
-        if node_device.token != token:
-            return HttpResponseForbidden("Node Device Authentication Failed")
-
+    def get(self, request):
         files = (
             os.path.join("dumps", "staff_dump.json"),
             os.path.join("dumps", "student_dump.json"),

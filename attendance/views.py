@@ -36,8 +36,8 @@ def download_attendance(request, pk):
     attendance_session = AttendanceSession.objects.get(id=pk)
 
     if (
-        attendance_session.initiator is None
-        or attendance_session.initiator.username != request.user.username
+            attendance_session.initiator is None
+            or attendance_session.initiator.username != request.user.username
     ):
         return HttpResponseForbidden(
             "403: Permission Denied %s here" % request.user.username
@@ -74,8 +74,8 @@ def download_attendance(request, pk):
         content_type="text/csv",
         headers={
             f"Content-Disposition": "attachment; filename="
-            f"{attendance_session.course.code} "
-            f'Attendance {datetime.strftime(attendance_session.start_time, "%d-%m-%Y")}.csv'
+                                    f"{attendance_session.course.code} "
+                                    f'Attendance {datetime.strftime(attendance_session.start_time, "%d-%m-%Y")}.csv'
         },
     )
 
@@ -104,8 +104,6 @@ def download_attendance(request, pk):
 class AttendanceSessionList(APIView):
     """Lists all attendance sessions belonging to user making request"""
 
-    authentication_classes = (NodeTokenAuth,)
-
     def get(self, request, format=None):
         attendance_sessions = AttendanceSession.objects.filter(
             initiator_id=request.user.username
@@ -114,11 +112,24 @@ class AttendanceSessionList(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = AttendanceSessionSerializer(data=request.data)
-        if serializer.is_valid():
+        if type(request.data) != list:
+            response = {"details": "Invalid data type!"}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        for session_data in request.data:
+            session_exist = AttendanceSession.objects.filter(id=session_data.get('id')).first()
+            if session_exist:
+                continue
+
+            serializer = AttendanceSessionSerializer(data=session_data)
+            if not serializer.is_valid():
+                # if there is an invalid data in one of the request
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            print(serializer.validated_data)
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        response = {'details': 'successfully synced'}
+        return Response(response, status=status.HTTP_201_CREATED)
 
 
 class AttendanceSessionByCourseList(APIView):
@@ -152,7 +163,6 @@ class AttendanceSessionByCourseList(APIView):
 
 
 class AttendanceList(APIView):
-    authentication_classes = (NodeTokenAuth,)
     """List all students, or create a new student."""
 
     def get(self, request):
@@ -161,11 +171,19 @@ class AttendanceList(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = AttendanceRecordSerializer(data=request.data)
-        if serializer.is_valid():
+        if type(request.data) != list:
+            response = {"details": "Invalid data type!"}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        for record_data in request.data:
+            serializer = AttendanceRecordSerializer(data=record_data)
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            print(serializer.validated_data)
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        response = {'details': 'successfully synced'}
+        return Response(response, status=status.HTTP_201_CREATED)
 
 
 class StudentAttendanceList(APIView):
@@ -197,7 +215,8 @@ class StudentAttendanceList(APIView):
 
         for event in student_attended_events_list:
             item = {}
-            item["academic_session"] = AcademicSessionSerializer(AcademicSession.objects.get(id=event["attendance_session__session__id"]), many=False).data
+            item["academic_session"] = AcademicSessionSerializer(
+                AcademicSession.objects.get(id=event["attendance_session__session__id"]), many=False).data
             item["course"] = CourseSerializer(
                 Course.objects.get(id=event["attendance_session__course__id"]),
                 many=False,
