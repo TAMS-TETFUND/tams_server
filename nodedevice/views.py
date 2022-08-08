@@ -81,11 +81,7 @@ class NodeDeviceList(APIView):
 
 class NodeSyncView(APIView):
     def get(self, request):
-        files = (
-            os.path.join("dumps", "staff_dump.json"),
-            os.path.join("dumps", "student_dump.json"),
-            os.path.join("dumps", "student_course.json"),
-        )
+        temp_file = "db_dump.json"
 
         db = (
             "db.staff",
@@ -93,44 +89,27 @@ class NodeSyncView(APIView):
             "db.course",
         )
 
-        # Staff filter
-        with open(files[0], "w") as output:
-            call_command(
-                "dump_object",
-                db[0],
-                [i.pk for i in Staff.objects.filter(is_exam_officer=False)],
-                stdout=output,
-            )
-
-        # Student filter
-        with open(files[1], "w") as output:
-            call_command(
-                "dump_object",
-                db[1],
-                [i.pk for i in Student.objects.filter(is_active=True)],
-                stdout=output,
-            )
-        # course filter
-        with open(files[2], "w") as output:
-            call_command(
-                "dump_object",
-                db[2],
-                [i.pk for i in Course.objects.all()],
-                stdout=output,
-            )
-
-        # merge json files while removing duplicate values
-        output = []
+        out = []
         seen = set()
 
-        for f in files:
-            f = open(f)
+        for i in range(len(db)):
+            with open(temp_file, "w") as output:
+                call_command(
+                    "dump_object",
+                    db[i],
+                    '*',
+                    stdout=output,
+                )
+
+            f = open(temp_file)
             data = json.loads(f.read())
             for obj in data:
                 key = "%s|%s" % (obj["model"], obj["pk"])
                 if key not in seen:
                     seen.add(key)
-                    output.append(obj)
+                    out.append(obj)
             f.close()
 
-        return Response(output)
+        os.remove(temp_file)
+
+        return Response(out)
