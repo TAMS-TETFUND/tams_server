@@ -19,11 +19,11 @@ const routes = [
     },
     {
         path: "/draggable",
-        name: "DraggableDemo",
+        name: "Draggable Demo",
         component: DraggableDemo,
     },
     {
-        path: "/attendance",
+        path: "/attendance/download",
         name: "Attendance",
         component: AttendanceDashboard,
 
@@ -33,7 +33,7 @@ const routes = [
     },
     {
         path: "/attendance/by-course",
-        name: "AttendanceByCourse",
+        name: "Attendance By Course",
         component: AttendanceByCourse,
 
         meta: {
@@ -42,7 +42,7 @@ const routes = [
     },
     {
         path: "/attendance/student-report/",
-        name: "StudentReportSearch",
+        name: "Student Report Search",
         component: StudentReportSearch,
 
         meta: {
@@ -51,7 +51,7 @@ const routes = [
     },
     {
         path: "/attendance/student-report/:id(.*)",
-        name: "StudentAttendanceReport",
+        name: "Student Attendance Report",
         component: StudentAttendanceReport,
 
         meta: {
@@ -69,7 +69,7 @@ const routes = [
     },
     {
         path: "/:catchAll(.*)",
-        name: "PageNotFound",
+        name: "Page Not Found",
         component: PageNotFound,
     }
 ]

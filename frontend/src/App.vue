@@ -1,53 +1,16 @@
 <template>
 <body class="bg-dark text-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-3 fixed-top border-bottom border-secondary">
-        <div class="container-fluid mx-3">
-            <router-link class="navbar-brand" to="/">TAMS</router-link>    
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navmenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navmenu">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                      <router-link class="nav-link a" to="/">Dashboard</router-link>
-                    </li>
-                    <li class="nav-item">
-                      <router-link class="nav-link a" to="/attendance">Attendance Records</router-link>
-                    </li>
-                    <li class="nav-item">
-                      <router-link class="nav-link a" to="/attendance/by-course">Attendance By Course</router-link>
-                    </li>
-                    <li class="nav-item">
-                      <router-link class="nav-link a" to="/draggable">Draggable Demo</router-link>
-                    </li>
-
-                    <template v-if="$store.state.isAuthenticated">
-                    <li class="nav-item dropdown">
-                      <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <b-icon-person-fill class="text-white h4"></b-icon-person-fill>
-                      </a>
-                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDopdown">
-                        <li><router-link class="a dropdown-item" to="/">Profile</router-link></li>
-                        <li><button class=" btn btn-dark a dropdown-item" @click="logout()">Log out</button></li>
-                      </ul>
-                    </li>
-                    </template>
-                    <li class="nav-item" v-else>
-                      <router-link class="btn btn-success px-5" to="/login">Log In</router-link>
-                    </li>
-                </ul>
-            </div>
-        </div> 
-     </nav>
+    <div>
+      <Navbar />
+    </div>
     <div class="row flex-nowrap">
-      <div class="col col-sm-1 col-md-3 col-xl-2 px-sm-1 px-0 bg-secondary bg-opacity-25 d-none d-sm-inline">
+      <div class="col-xl-3 d-none d-xl-flex">
         <SideBar />
       </div>
-      <div class="col py-3">    
+      <div class="col-sm-12 col-xl-9 py-5 ">    
         <section class="text-white">
 
-            <div class="container">
+            <div class="container-fluid component-mount">
                 <router-view v-slot="{ Component }">
                   <transition name="fade" mode="out-in">
                     <component :is="Component" />
@@ -62,13 +25,13 @@
 
 <script>
 import axios from 'axios'
-import { BIconPersonFill } from 'bootstrap-icons-vue'
 import SideBar from './components/SideBar.vue'
+import Navbar from './components/Navbar.vue'
 export default {
   name: 'App',
   components: {
-    BIconPersonFill,
-    SideBar
+    SideBar,
+    Navbar
   },
   beforeCreate(){
     this.$store.commit('initializeStore')
@@ -80,20 +43,6 @@ export default {
     } else {
       axios.defaults.headers.common['Authorization'] = ""
     }
-  },
-  methods: {
-    logout() {
-      axios.defaults.headers.common["Authorization"] = ""
-
-      localStorage.removeItem("token")
-      localStorage.removeItem("username")
-      localStorage.removeItem("email")
-      localStorage.removeItem("userId")
-
-      this.$store.commit('removeToken')
-
-      this.$router.push('/')
-    }
   }
 }
 </script>
@@ -101,35 +50,6 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap');
-/* .wrapper {
-  color: var(--body);
-  font-family: Sora, "san-serif";
-  line-height: 1.7;
-  background-position: center;
-  background-size: cover;
-  background-image: url('~@/assets/background.png');
-  z-index: 2;
-  position: relative;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow-y: auto;
-}
-
-.wrapper:after {
-  content: "";
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(255, 255, 255 , 0.85);
-  z-index: -1;
-  overflow-y: auto;
-} */
 body::before{
     display: block;
     content: '';
@@ -150,7 +70,11 @@ body {
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.25s ease-out;
 }
-.a:active::after{
-  border-bottom: 1px solid green;
+.component-mount a {
+  color:#69f0ae;
+}
+.component-mount a:hover{
+  color: #198754;
+  text-decoration: none;
 }
 </style>

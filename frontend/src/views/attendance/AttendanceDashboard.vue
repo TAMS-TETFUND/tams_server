@@ -1,30 +1,32 @@
 <template>
-    <section>
+    <section class="bg-secondary bg-opacity-10 p-5">
         <h3 class="mx-auto mb-5 mt-3 text-center">Attendance Records</h3>
         <div v-if="apiFetchFail"><ErrorDisplay errors="Something went wrong" /></div>
         <template v-if="attendance_sessions">
-            <table class="table table-dark table-striped text-light">
-                <thead>
-                    <tr>
-                        <th scope="col">Session</th>
-                        <th scope="col">Course</th>
-                        <th scope="col">Event Type</th>
-                        <th scope="col">Start Time</th>
-                        <th scope="col">Duration (Hrs)</th>
-                        <th scope="col">Event Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="session in attendance_sessions.results" v-bind:key="session.id">
-                        <td>{{ session.session.session }}</td>
-                        <td><a v-bind:href="urlBase + session.id">{{ session.course.code }}: {{ session.course.title }}</a></td>
-                        <td>{{ session.event_type_detail }}</td>
-                        <td>{{ session.start_time }}</td>
-                        <td>{{ session.duration }}</td>
-                        <td>{{ session.status_detail }}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-dark table-striped text-light">
+                    <thead>
+                        <tr>
+                            <th scope="col">Session</th>
+                            <th scope="col">Course</th>
+                            <th scope="col">Event Type</th>
+                            <th scope="col">Start Time</th>
+                            <th scope="col">Duration (Hrs)</th>
+                            <th scope="col">Event Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="session in attendance_sessions.results" v-bind:key="session.id">
+                            <td>{{ session.session.session }}</td>
+                            <td><a v-bind:href="urlBase + session.id">{{ session.course.code }}: {{ session.course.title }}</a></td>
+                            <td>{{ session.event_type_detail }}</td>
+                            <td>{{ session.start_time }}</td>
+                            <td>{{ session.duration }}</td>
+                            <td>{{ session.status_detail }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <div>
                 <Button type="button" class="btn btn-success btn-md mx-3" @click="loadPreviousPage()" v-if="attendance_sessions.previous">Previous</Button>
                 <Button type="button" class="btn btn-success btn-md" @click="loadNextPage()" v-if="attendance_sessions.next">Next</Button>

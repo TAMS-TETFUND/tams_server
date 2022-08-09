@@ -1,34 +1,36 @@
 <template>
-    <section>
+    <section class="bg-secondary bg-opacity-10 p-5">
         <h3 class="mx-auto mb-5 mt-3 text-center">Attendance Records: By Courses</h3>
 
         <div v-if="apiFetchFail"><ErrorDisplay errors="Something went wrong" /></div>
         <template v-if="sessions_breakdown && dataReady">
-            <table class="table table-dark table-striped text-light">
-                <thead>
-                    <tr>
-                        <th scope="col">Session</th>
-                        <th scope="col">Course</th>
-                        <th scope="col">Lectures/Labs</th>
-                        <th scope="col">Exams</th>
-                        <th scope="col">Continuous Assessments</th>
-                        <th scope="col">Number of Staff</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="session in sessions_breakdown" v-bind:key="session.code">
-                        <td>{{ session.session }}</td>
-                        <td>
-                            <a v-bind:href="'/session/'+ session.id">
-                            {{ session.course }}</a>
-                        </td>
-                        <td>{{ session.lectures }}</td>
-                        <td>{{ session.exams }}</td>
-                        <td>{{ session.quiz }}</td>
-                        <td>{{ session.initiators_count }}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-dark table-striped text-light">
+                    <thead>
+                        <tr>
+                            <th scope="col">Session</th>
+                            <th scope="col">Course</th>
+                            <th scope="col">Lectures/Labs</th>
+                            <th scope="col">Exams</th>
+                            <th scope="col">Continuous Assessments</th>
+                            <th scope="col">Number of Staff</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="session in sessions_breakdown" v-bind:key="session.code">
+                            <td>{{ session.session }}</td>
+                            <td>
+                                <a v-bind:href="'/session/'+ session.id">
+                                {{ session.course }}</a>
+                            </td>
+                            <td>{{ session.lectures }}</td>
+                            <td>{{ session.exams }}</td>
+                            <td>{{ session.quiz }}</td>
+                            <td>{{ session.initiators_count }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <div>
                 <Button type="button" class="btn btn-success btn-md mx-3" @click="loadPreviousPage()" v-if="hasPrev">Previous</Button>
                 <Button type="button" class="btn btn-success btn-md" @click="loadNextPage()" v-if="hasNext">Next</Button>

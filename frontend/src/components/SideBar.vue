@@ -1,29 +1,5 @@
 <template>
-    <!-- <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-        <ul class="nav nav-pill flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-            <li class="nav-item">
-                <router-link class="a nav-link align-middle px-0" to="/attendance">
-                    <BIconFileEarmarkArrowDownFill class="text-success me-1"/><span class="ms-1 d-none d-md-inline text-white">Download Attendance</span>
-                </router-link>
-            </li>
-            <li>
-                <a href="#reports" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                    <BIconGraphUp class="text-success me-1" /><span class="text-white d-none d-md-inline">Reports</span>
-                </a>
-                <ul class="collapse nav flex-column ms-1" id="reports" data-bs-parent="#menu">
-                    <li class="w-100">
-                        <router-link class="a nav-link" to="/attendance/student-report/"><BIconFileEarmarkPerson class="text-success me-1" /><span class="d-none d-md-inline text-white">Student</span></router-link>
-                    </li>
-                    <li class="w-100">
-                        <router-link class="a nav-link" to="/attendance/by-course"><BIconCollectionFill class="text-success me-1" /><span class="d-none d-md-inline text-white">Course</span></router-link>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-     -->
-     <aside id="sidebar" class="sidebar bg-secondary bg-opacity-10">
-
+    <aside id="sidebar" class="sidebar bg-secondary bg-opacity-10 pt-5">
          <ul class="sidebar-nav" id="sidebar-nav">
              <li class="nav-item">
                  <a href="#" class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#report-nav">
@@ -55,7 +31,7 @@
                  </ul>
              </li>
          </ul>
-     </aside>
+    </aside>
 </template>
 
 <script>
@@ -68,6 +44,7 @@ import {
     BIconChevronDown
     } from "bootstrap-icons-vue";
 export default {
+    name: 'SideBar',
     components: {
         BIconCollectionFill,
         BIconFileEarmarkPerson,
@@ -92,8 +69,7 @@ export default {
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #aab7cf transparent;
-  box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
-  /* background-color: #fff; */
+  box-shadow: 0px 0px 20px rgba(206, 212, 218,0.03);
 }
 
 @media (max-width: 1199px) {
@@ -112,7 +88,7 @@ export default {
   background-color: #aab7cf;
 }
 
-@media (min-width: 1200px) {
+/* @media (min-width: 1200px) {
 
   #main,
   #footer {
@@ -136,7 +112,7 @@ export default {
   .toggle-sidebar .sidebar {
     left: -300px;
   }
-}
+} */
 
 .sidebar-nav {
   padding: 0;
@@ -167,9 +143,8 @@ export default {
   align-items: center;
   font-size: 15px;
   font-weight: 600;
-  color: #92f7bc;
+  color: #198754;
   transition: 0.3;
-  /* background: #f6f9ff; */
   background: rgba(206, 212, 218,0.1);
   padding: 10px 15px;
   border-radius: 4px;
@@ -178,11 +153,11 @@ export default {
 .sidebar-nav .nav-link i {
   font-size: 16px;
   margin-right: 10px;
-  color: #92f7bc;
+  color: #198754;
 }
 
 .sidebar-nav .nav-link.collapsed {
-  color: #198754;
+  color: #69F0AE;
   background: rgba(206, 212, 218,0.01);
 }
 
@@ -191,12 +166,12 @@ export default {
 }
 
 .sidebar-nav .nav-link:hover {
-  color: #92f7bc;
+  color: #198754;
   background: rgba(206, 212, 218,0.1);
 }
 
 .sidebar-nav .nav-link:hover i {
-  color: #92f7bc;
+  color: #198754;
 }
 
 .sidebar-nav .nav-link .collapse-icon {
@@ -219,7 +194,7 @@ export default {
   align-items: center;
   font-size: 14px;
   font-weight: 600;
-  color: #198754;
+  color: #69F0AE;
   transition: 0.3;
   padding: 10px 0 10px 40px;
   transition: 0.3s;
@@ -234,12 +209,12 @@ export default {
 
 .sidebar-nav .nav-content a:hover,
 .sidebar-nav .nav-content .router-link-active {
-  color: #92f7bc;
+  color: #198754;
   background: rgba(206, 212, 218,0.1);
 
 }
 
 .sidebar-nav .nav-content .router-link-active i {
-  background-color: #92f7bc;
+  background-color: #198754;
 }
 </style>
