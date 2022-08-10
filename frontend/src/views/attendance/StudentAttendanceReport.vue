@@ -1,6 +1,7 @@
 <template>
-    <div class="container-fluid align-contents-center">
+    <div class="container-fluid align-contents-center bg-secondary bg-opacity-10 p-5">
         <div class="my-3 text-center"><h2>Student Attendance Report</h2></div>
+        <div v-if="errorMessage"><ErrorDisplay :errors="errorMessage" /></div>
         <div class="card bg-secondary bg-opacity-25" v-if="student">
             <div class="card-title text-center">
                 <h3>{{ full_name }}</h3>
@@ -33,41 +34,54 @@
                 </tbody>
 
             </table>
-            <!-- <span>{{attendance_data}}</span> -->
+            <span>{{attendance_data}}</span>
         </div>
     </div>
 </template>
 
 <script>
 import axios from 'axios'
+import ErrorDisplay from '../../components/ErrorDisplay.vue'
 export default {
     name: "StudentAttendanceReport",
+    components: {
+        ErrorDisplay
+    },
     data() {
         return {
             full_name: "",
             student: null,
-            attendance_data: null
+            attendance_data: null,
+            errorMessage: null
         }
     },
     mounted(){
         this.set_student_details()
-        this.get_attendance_data()
     },
     methods: {
-        set_student_details(){
-            axios
+        async set_student_details(){
+            this.errorMessage = null
+            await axios
             .get("/api/v1/students/"+this.$route.params.id)
             .then(response => {
                 this.student = response.data
                 this.full_name = response.data.last_name .toUpperCase()+ ", " + response.data.first_name.toUpperCase()
+
+                // get attendance for data for the student
+                this.get_attendance_data()
             }
             )
             .catch(error => {
                 console.log(error)
+                if(error.response.status == 0){
+                    this.errorMessage = 'Failed to connect to server'
+                }else if(error.response.status == 404){
+                    this.errorMessage = `No student found with given registration number (${this.$route.params.id})`
+                }
             })
         },
-        get_attendance_data(){
-            axios
+        async get_attendance_data(){
+            await axios
             .get("/api/v1/attendance/student-report/"+this.$route.params.id)
             .then(response => {
                 this.attendance_data = response.data

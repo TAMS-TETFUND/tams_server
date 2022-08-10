@@ -1,7 +1,9 @@
 <template>
-    <div class="page-content">
-        <h1><BIconExclamationTriangleFill class=" text-danger display-1 pe-4 h3" /><span>Page Not Found</span></h1>
-        <div class="col">
+    <div class="page-content bg-secondary bg-opacity-10 p-5">
+        <h1 class="bg-secondary bg-opacity-10 d-flex justify-content-center">
+            <BIconExclamationTriangleFill class="text-danger display-1 h3" />
+            <span class="ms-5 mt-2">Page Not Found</span></h1>
+        <div class="d-flex justify-content-center">
             <img src="../assets/404.svg" alt="" class="img-fluid">
         </div>
     </div>

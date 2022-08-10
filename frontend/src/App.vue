@@ -3,14 +3,13 @@
     <div>
       <Navbar />
     </div>
-    <div class="row flex-nowrap">
-      <div class="col-xl-3 d-none d-xl-flex">
+    <div class="row flex-nowrap d-flex justify-content-center">
+      <!-- <div class="col-xl-3 d-none d-xl-flex" v-if="$store.state.isAuthenticated">
         <SideBar />
-      </div>
-      <div class="col-sm-12 col-xl-9 py-5 ">    
+      </div> -->
+      <div class="col-sm-12 col-xl py-5 ">    
         <section class="text-white">
-
-            <div class="container-fluid component-mount">
+            <div class="component-mount">
                 <router-view v-slot="{ Component }">
                   <transition name="fade" mode="out-in">
                     <component :is="Component" />
@@ -25,12 +24,12 @@
 
 <script>
 import axios from 'axios'
-import SideBar from './components/SideBar.vue'
+// import SideBar from './components/SideBar.vue'
 import Navbar from './components/Navbar.vue'
 export default {
   name: 'App',
   components: {
-    SideBar,
+    // SideBar,
     Navbar
   },
   beforeCreate(){
@@ -57,6 +56,7 @@ body::before{
 }
 body{
     overflow-x: hidden;
+    min-height:100vh;
 }
 html {
   min-height: 100%;

@@ -1,11 +1,11 @@
 <template>
-    <section class="bg-secondary bg-opacity-10 p-5">
+    <section class="container-fluid bg-secondary bg-opacity-10 py-5 px-md-5">
         <h3 class="mx-auto mb-5 mt-3 text-center">Attendance Records: By Courses</h3>
 
         <div v-if="apiFetchFail"><ErrorDisplay errors="Something went wrong" /></div>
         <template v-if="sessions_breakdown && dataReady">
             <div class="table-responsive">
-                <table class="table table-dark table-striped text-light">
+                <table class="table table-sm table-dark table-striped text-light">
                     <thead>
                         <tr>
                             <th scope="col">Session</th>

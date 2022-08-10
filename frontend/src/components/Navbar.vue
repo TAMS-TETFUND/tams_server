@@ -8,23 +8,39 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navmenu">
                 <!-- <span class="navbar-toggler-icon bg-success"></span> -->
-                <BIconList class="navbar-toggle-icon h3" />
+                <BIconList class="navbar-toggle-icon h1 text-white" />
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navmenu">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                    <router-link class="nav-link" to="/">Dashboard</router-link>
+                    <router-link class="nav-link" to="/">Home</router-link>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item dropdown" v-if="$store.state.isAuthenticated">
+                      <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">Attendance</a>
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li>
+                          <router-link class="nav-link" to="/attendance/download"><span class="text-nowrap">Download Attendance</span></router-link>
+                        </li>
+                        <li>
+                          <router-link class="nav-link" to="/attendance/by-course"><span class="text-nowrap">Attendance Analytics</span></router-link>
+                        </li>
+                        <li>
+                          <router-link class="nav-link" to="/attendance/student-report"><span class="text-nowrap">Student Reports</span></router-link>
+                        </li>    
+                      </ul>
+                    </li>
+                    <!-- <li class="nav-item">
                     <router-link class="nav-link" to="/attendance/download">Attendance Records</router-link>
                     </li>
                     <li class="nav-item">
                     <router-link class="nav-link" to="/attendance/by-course">Attendance By Course</router-link>
-                    </li>
+                    </li> -->
                     <li class="nav-item">
-                    <router-link class="nav-link" to="/draggable">Draggable Demo</router-link>
+                      <router-link class="nav-link" to="/draggable">Product Details</router-link>
                     </li>
-
+                      <li class="nav-item">
+                        <router-link class="nav-link" to="/draggable">Contact Us</router-link>
+                    </li>
                     <template v-if="$store.state.isAuthenticated">
                     <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
