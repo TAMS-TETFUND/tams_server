@@ -8,6 +8,8 @@ import AttendanceByCourse from "@/views/attendance/AttendanceByCourse.vue"
 import StudentAttendanceReport from "@/views/attendance/StudentAttendanceReport.vue"
 import StudentReportSearch from "@/views/attendance/StudentReportSearch.vue"
 import DraggableDemo from "@/views/DraggableDemo.vue"
+import Contact from "@/views/Contact.vue"
+import ProductDetail from "@/views/ProductDetail.vue"
 import store from "../store"
 import NProgress from "nprogress"
 
@@ -21,6 +23,16 @@ const routes = [
         path: "/draggable",
         name: "Draggable Demo",
         component: DraggableDemo,
+    },
+    {
+        path: "/product-details",
+        name: "Product Details",
+        component: ProductDetail,
+    },
+    {
+        path: "/contact",
+        name: "Contact Us",
+        component: Contact,
     },
     {
         path: "/attendance/download",

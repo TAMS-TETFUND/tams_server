@@ -74,7 +74,7 @@
                     <div class="col-md-4 col-xs-12 d-flex justify-content-center align-items-stretch py-3">
                         <div class="card border-0" style="background-color:inherit;">
                             <div class="card-body text-center">
-                                <img class="img-fluid" style="max-height: 100px;" src="../assets/tetfund-logo.png" alt="">
+                                <img class="img-fluid" style="max-height: 100px;" src="../assets/tetfund.png" alt="">
                                 <p class="card-text fst-italic">The Tertiary Education Trust Fund</p>
                             </div>
                         </div>

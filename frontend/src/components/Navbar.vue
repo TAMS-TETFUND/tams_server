@@ -36,10 +36,10 @@
                     <router-link class="nav-link" to="/attendance/by-course">Attendance By Course</router-link>
                     </li> -->
                     <li class="nav-item">
-                      <router-link class="nav-link" to="/draggable">Product Details</router-link>
+                      <router-link class="nav-link" to="/product-details">Product Details</router-link>
                     </li>
                       <li class="nav-item">
-                        <router-link class="nav-link" to="/draggable">Contact Us</router-link>
+                        <router-link class="nav-link" to="/contact">Contact Us</router-link>
                     </li>
                     <template v-if="$store.state.isAuthenticated">
                     <li class="nav-item dropdown">
