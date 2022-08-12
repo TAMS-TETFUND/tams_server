@@ -1,6 +1,7 @@
 import csv
 from datetime import datetime
 
+from django.db import IntegrityError
 from django.http import (
     Http404,
     HttpResponse,
@@ -126,7 +127,9 @@ class AttendanceSessionList(APIView):
                 # if there is an invalid data in one of the request
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             print(serializer.validated_data)
-            serializer.save()
+            session = serializer.save()
+            session.sync_status = True
+            session.save()
 
         response = {'details': 'successfully synced'}
         return Response(response, status=status.HTTP_201_CREATED)
@@ -179,8 +182,10 @@ class AttendanceList(APIView):
             serializer = AttendanceRecordSerializer(data=record_data)
             if not serializer.is_valid():
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            print(serializer.validated_data)
-            serializer.save()
+            try:
+                serializer.save()
+            except IntegrityError:
+                continue
 
         response = {'details': 'successfully synced'}
         return Response(response, status=status.HTTP_201_CREATED)

@@ -84,6 +84,7 @@ class NodeSyncView(APIView):
         temp_file = "db_dump.json"
 
         db = (
+            "db.department",
             "db.staff",
             "db.student",
             "db.course",
