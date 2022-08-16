@@ -83,9 +83,15 @@ class NodeSyncView(APIView):
     def get(self, request):
         temp_file = "db_dump.json"
 
+        # db tables to be synced
         db = (
-            "db.department",
+            "db.academicsession",
             "db.staff",
+            "db.stafftitle",
+            "db.staff_staff_titles",
+            "db.faculty",
+            "db.faculty",
+            "db.department",
             "db.student",
             "db.course",
         )
