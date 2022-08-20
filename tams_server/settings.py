@@ -134,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # use custom user model
-AUTH_USER_MODEL = "db.AppUser"
+AUTH_USER_MODEL = "db.Staff"
 
 # redirect to home url
 LOGIN_REDIRECT_URL = "/"
