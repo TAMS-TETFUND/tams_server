@@ -60,8 +60,6 @@ class NodeDeviceDetail(APIView):
 class NodeDeviceList(APIView):
     """List all node devices, or create a new node_device."""
 
-    # authentication_classes = (NodeTokenAuth,)
-
     def get(self, request, format=None):
         node_devices = NodeDevice.objects.all()
         serializer = NodeDeviceSerializer(node_devices, many=True)
@@ -82,85 +80,45 @@ class NodeDeviceList(APIView):
 
 
 class NodeSyncView(APIView):
-    def get(self, request, format=None):
-        # try:
-        #     node_device = NodeDevice.objects.get(id=device_id)
-        # except NodeDevice.DoesNotExist:
-        #     return HttpResponseBadRequest("Node device does not exist")
+    def get(self, request):
+        temp_file = "db_dump.json"
 
-        # if node_device.token != token:
-        #     return HttpResponseForbidden("Node Device Authentication Failed")
-
-        files = (
-            os.path.join("dumps", "staff_dump.json"),
-            os.path.join("dumps", "student_dump.json"),
-            os.path.join("dumps", "student_course.json"),
-            os.path.join("dumps", "department_dump.json"),
-            os.path.join("dumps", "faculty_dump.json")
-        )
-
+        # db tables to be synced
         db = (
+            "db.academicsession",
             "db.staff",
+            "db.stafftitle",
+            "db.staff_staff_titles",
+            "db.faculty",
+            "db.faculty",
+            "db.department",
             "db.student",
             "db.course",
             "db.department",
             "db.faculty"
         )
 
-        # Staff filter
-        with open(files[0], "w") as output:
-            call_command(
-                "dump_object",
-                db[0],
-                [i.pk for i in Staff.objects.filter(is_exam_officer=False)],
-                stdout=output,
-            )
-
-        # Student filter
-        with open(files[1], "w") as output:
-            call_command(
-                "dump_object",
-                db[1],
-                [i.pk for i in Student.objects.filter(is_active=True)],
-                stdout=output,
-            )
-        # course filter
-        with open(files[2], "w") as output:
-            call_command(
-                "dump_object",
-                db[2],
-                [i.pk for i in Course.objects.all()],
-                stdout=output,
-            )
-
-        with open(files[3], "w") as output:
-            call_command(
-                "dump_object",
-                db[3],
-                [i.pk for i in Department.objects.all()],
-                stdout=output
-            )
-
-        
-        with open(files[4], "w") as output:
-            call_command(
-                "dump_object",
-                db[4],
-                [i.pk for i in Faculty.objects.all()],
-                stdout=output
-            )
-        # merge json files while removing duplicate values
-        output = []
+        out = []
         seen = set()
 
-        for f in files:
-            f = open(f)
+        for i in range(len(db)):
+            with open(temp_file, "w") as output:
+                call_command(
+                    "dump_object",
+                    db[i],
+                    '*',
+                    stdout=output,
+                )
+
+            f = open(temp_file)
             data = json.loads(f.read())
             for obj in data:
                 key = "%s|%s" % (obj["model"], obj["pk"])
                 if key not in seen:
                     seen.add(key)
-                    output.append(obj)
+                    out.append(obj)
             f.close()
 
-        return Response(output)
+        os.remove(temp_file)
+
+        return Response(out)

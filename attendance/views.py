@@ -1,6 +1,7 @@
 import csv
 from datetime import datetime
 
+from django.db import IntegrityError
 from django.http import (
     Http404,
     HttpResponse,
@@ -36,8 +37,8 @@ def download_attendance(request, pk):
     attendance_session = AttendanceSession.objects.get(id=pk)
 
     if (
-        attendance_session.initiator is None
-        or attendance_session.initiator.username != request.user.username
+            attendance_session.initiator is None
+            or attendance_session.initiator.username != request.user.username
     ):
         return HttpResponseForbidden(
             "403: Permission Denied %s here" % request.user.username
@@ -74,8 +75,8 @@ def download_attendance(request, pk):
         content_type="text/csv",
         headers={
             f"Content-Disposition": "attachment; filename="
-            f"{attendance_session.course.code} "
-            f'Attendance {datetime.strftime(attendance_session.start_time, "%d-%m-%Y")}.csv'
+                                    f"{attendance_session.course.code} "
+                                    f'Attendance {datetime.strftime(attendance_session.start_time, "%d-%m-%Y")}.csv'
         },
     )
 
@@ -193,11 +194,21 @@ class AttendanceList(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = AttendanceRecordSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if type(request.data) != list:
+            response = {"details": "Invalid data type!"}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        for record_data in request.data:
+            serializer = AttendanceRecordSerializer(data=record_data)
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                serializer.save()
+            except IntegrityError:
+                continue
+
+        response = {'details': 'successfully synced'}
+        return Response(response, status=status.HTTP_201_CREATED)
 
 
 class StudentAttendanceList(APIView):
