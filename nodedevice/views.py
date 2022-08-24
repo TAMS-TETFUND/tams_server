@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from db.models import NodeDevice, Student, Staff, Course
+from db.models import Department, Faculty, NodeDevice, Student, Staff, Course
 from db.datasynch import dump_data
 from nodedevice.auth import NodeTokenAuth
 from nodedevice.serializers import NodeDeviceSerializer
@@ -82,25 +82,29 @@ class NodeDeviceList(APIView):
 
 
 class NodeSyncView(APIView):
-    def get(self, request, device_id, token):
-        try:
-            node_device = NodeDevice.objects.get(id=device_id)
-        except NodeDevice.DoesNotExist:
-            return HttpResponseBadRequest("Node device does not exist")
+    def get(self, request, format=None):
+        # try:
+        #     node_device = NodeDevice.objects.get(id=device_id)
+        # except NodeDevice.DoesNotExist:
+        #     return HttpResponseBadRequest("Node device does not exist")
 
-        if node_device.token != token:
-            return HttpResponseForbidden("Node Device Authentication Failed")
+        # if node_device.token != token:
+        #     return HttpResponseForbidden("Node Device Authentication Failed")
 
         files = (
             os.path.join("dumps", "staff_dump.json"),
             os.path.join("dumps", "student_dump.json"),
             os.path.join("dumps", "student_course.json"),
+            os.path.join("dumps", "department_dump.json"),
+            os.path.join("dumps", "faculty_dump.json")
         )
 
         db = (
             "db.staff",
             "db.student",
             "db.course",
+            "db.department",
+            "db.faculty"
         )
 
         # Staff filter
@@ -129,6 +133,22 @@ class NodeSyncView(APIView):
                 stdout=output,
             )
 
+        with open(files[3], "w") as output:
+            call_command(
+                "dump_object",
+                db[3],
+                [i.pk for i in Department.objects.all()],
+                stdout=output
+            )
+
+        
+        with open(files[4], "w") as output:
+            call_command(
+                "dump_object",
+                db[4],
+                [i.pk for i in Faculty.objects.all()],
+                stdout=output
+            )
         # merge json files while removing duplicate values
         output = []
         seen = set()
