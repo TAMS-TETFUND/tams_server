@@ -7,34 +7,38 @@
                 <h3>{{ full_name }}</h3>
             </div>
             <div class="card-body">
-                <span>Department/Faculty: null/null</span><br>
+                <span>Sex: {{student.sex_detail}}</span><br>
+                <span>Department/Faculty: {{student.department.name}}/{{student.department.faculty.name}}</span><br>
                 <span>Current Level of Study: {{ student.level_of_study * 100}}</span><br>
                 <span>Possible Year of Graduation: {{student.possible_grad_yr}}</span><br>
-                <span>Admission status: null</span>
+                <span>Admission status: {{student.admission_status_detail}}</span>
             </div>
         </div>
 
         <div class="my-3" v-if="attendance_data">
-            <table class="table table-dark table-hover bg-secondary">
-                <thead>
-                    <tr>
-                        <th scope="col">Session</th>
-                        <th scope="col">Course</th>
-                        <th scope="col">Attendance Rate</th>
-                        <th scope="col">Missed CA/Exam</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="record in attendance_data" :key="record">
-                        <td>{{record.academic_session.session}}</td>
-                        <td>{{record.course.code}}</td>
-                        <td>{{ record.student_records.length / record.events.length * 100}}%</td>
-                        <td>sd</td>
-                    </tr>
-                </tbody>
+            <div v-if="attendance_data.length > 0">
+                <table class="table table-dark table-hover bg-secondary">
+                    <thead>
+                        <tr>
+                            <th scope="col">Session</th>
+                            <th scope="col">Course</th>
+                            <th scope="col">Attendance Rate</th>
+                            <th scope="col">Missed CA/Exam</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="record in attendance_data" :key="record">
+                            <td>{{record.academic_session.session}}</td>
+                            <td>{{record.course.code}}</td>
+                            <td>{{ record.student_records.length / record.events.length * 100}}%</td>
+                            <td>sd</td>
+                        </tr>
+                    </tbody>
 
-            </table>
-            <span>{{attendance_data}}</span>
+                </table>
+                <!-- <span>{{attendance_data}}</span> -->
+            </div>
+            <div class="text-center" v-else><p class="lead">No attendance records found.</p></div>
         </div>
     </div>
 </template>

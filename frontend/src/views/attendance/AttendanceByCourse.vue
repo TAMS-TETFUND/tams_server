@@ -11,25 +11,25 @@
                             <th scope="col">Session</th>
                             <th scope="col">Course</th>
                             <th scope="col">Lectures/Labs</th>
-                            <th scope="col">Exams</th>
                             <th scope="col">Continuous Assessments</th>
-                            <th scope="col">Number of Staff</th>
+                            <th scope="col">Exams</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="session in sessions_breakdown" v-bind:key="session.code">
                             <td>{{ session.session }}</td>
                             <td>
-                                <a v-bind:href="'/session/'+ session.id">
-                                {{ session.course }}</a>
+                                <router-link v-bind:to="`/attendance/by-course/detail/${session.session_id}/${session.course_id}`">
+                                {{ session.course }}</router-link>
                             </td>
                             <td>{{ session.lectures }}</td>
-                            <td>{{ session.exams }}</td>
                             <td>{{ session.quiz }}</td>
-                            <td>{{ session.initiators_count }}</td>
+                            <td>{{ session.exams }}</td>
                         </tr>
                     </tbody>
                 </table>
+                <div>{{sessions_breakdown}}</div>
             </div>
             <div>
                 <Button type="button" class="btn btn-success btn-md mx-3" @click="loadPreviousPage()" v-if="hasPrev">Previous</Button>
@@ -69,7 +69,7 @@ export default {
         async processAttendanceSession(){
             this.dataReady = false
         await axios
-        .get(`/api/v1/attendance/by-course/?page=${this.currentPage}`, {
+        .get(`/api/v1/attendance/by-course/`, {
             headers: {Authorization: 'Token ' + this.$store.state.token}
         })
         .then(response =>{
@@ -78,9 +78,9 @@ export default {
             this.hasPrev = response.data.previous
             let courseList = []
             let initiatorList = []
-            let responseData = response.data.results
+            let responseData = response.data
             for (let i in responseData){
-                courseList.push([responseData[i].course.code, responseData[i].session.session])
+                courseList.push([responseData[i].course.code, responseData[i].session.session, responseData[i].course.id, responseData[i].session.id])
                 initiatorList.push(responseData[i].initiator)
             }
             const uniqueCourseList = courseList.filter((value, index) => {
@@ -96,13 +96,14 @@ export default {
                     return JSON.stringify(initiatorList) === _value
                 })
             })
-
+            console.log(uniqueCourseList)
             let lectureAndLabsCount, ExamCount, QuizCount
             for (let x in uniqueCourseList){
                 lectureAndLabsCount = 0 
                 ExamCount = 0
                 QuizCount = 0
                 for ( let y in responseData){
+                    console.log(responseData[y])
                     if (responseData[y].course.code == uniqueCourseList[x][0] && responseData[y].session.session == uniqueCourseList[x][1]){
                         if (responseData[y].event_type_detail == "Lecture" || responseData[y].event_type_detail == "Lab"){
                             lectureAndLabsCount = lectureAndLabsCount + 1
@@ -116,8 +117,10 @@ export default {
                     }
                 }
                 this.sessions_breakdown.push({
-                    "course":uniqueCourseList[x][0], 
+                    "course":uniqueCourseList[x][0],
                     "session": uniqueCourseList[x][1],
+                    "course_id": uniqueCourseList[x][2],
+                    "session_id": uniqueCourseList[x][3],
                     "lectures": lectureAndLabsCount, 
                     "exams": ExamCount, 
                     "quiz": QuizCount, 
@@ -126,6 +129,7 @@ export default {
 
             }
             this.dataReady = true
+            console.log(uniqueCourseList)
         })
         
         },

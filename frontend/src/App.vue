@@ -4,9 +4,6 @@
       <Navbar />
     </div>
     <div class="row flex-nowrap d-flex justify-content-center">
-      <!-- <div class="col-xl-3 d-none d-xl-flex" v-if="$store.state.isAuthenticated">
-        <SideBar />
-      </div> -->
       <div class="col-sm-12 col-xl py-5 ">    
         <section class="text-white">
             <div class="component-mount">

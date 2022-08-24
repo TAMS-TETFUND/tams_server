@@ -5,6 +5,7 @@ import Login from "@/views/Login.vue"
 import PageNotFound from "@/views/PageNotFound.vue"
 import AttendanceDashboard from "@/views/attendance/AttendanceDashboard.vue"
 import AttendanceByCourse from "@/views/attendance/AttendanceByCourse.vue"
+import AttendanceByCourseDetails from "@/views/attendance/AttendanceByCourseDetails.vue"
 import StudentAttendanceReport from "@/views/attendance/StudentAttendanceReport.vue"
 import StudentReportSearch from "@/views/attendance/StudentReportSearch.vue"
 import DraggableDemo from "@/views/DraggableDemo.vue"
@@ -47,6 +48,15 @@ const routes = [
         path: "/attendance/by-course",
         name: "Attendance By Course",
         component: AttendanceByCourse,
+
+        meta: {
+            requireLogin: true
+        }
+    },
+    {
+        path: "/attendance/by-course/detail/:session/:course",
+        name: "Attendance By Course Details",
+        component: AttendanceByCourseDetails,
 
         meta: {
             requireLogin: true

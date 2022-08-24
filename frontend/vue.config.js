@@ -1,4 +1,4 @@
 module.exports = {
-    outputDir: '../static/src/vue/dist',
+    outputDir: '../static_files/src/vue/dist',
     filenameHashing: false
 }

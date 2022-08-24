@@ -109,7 +109,6 @@ export default {
   display: flex;
   align-items: center;
   font-size: 15px;
-  font-weight: 500;
   color: #69f0ae;
 }
 

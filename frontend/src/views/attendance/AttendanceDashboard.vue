@@ -13,6 +13,7 @@
                             <th scope="col">Start Time</th>
                             <th scope="col">Duration (Hrs)</th>
                             <th scope="col">Event Status</th>
+                            <th scope="col">No. of Students Present</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -23,6 +24,7 @@
                             <td>{{ session.start_time }}</td>
                             <td>{{ session.duration }}</td>
                             <td>{{ session.status_detail }}</td>
+                            <td>{{ session.student_check_in_count }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -33,7 +35,7 @@
             </div>
         </template>
         <template v-else>
-            <TableSkeleton cols="6" rows="7" />
+            <TableSkeleton cols="7" rows="7" />
         </template>
     </section>
 </template>
