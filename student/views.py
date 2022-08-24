@@ -1,56 +1,41 @@
 from django.http import Http404
 
 from rest_framework.views import APIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from db.models import Student
+from db.models import Department, Student
 from nodedevice.auth import NodeTokenAuth
-from student.serializers import StudentSerializer
+from student.serializers import StudentSerializer, StudentUpdateSerializer
 
 
-class StudentDetail(APIView):
+class StudentDetail(RetrieveUpdateDestroyAPIView):
     """Retrieve, update or delete a student instance"""
+    queryset = Student.objects.all()
 
-    # authentication_classes = (NodeTokenAuth,)
-
-    def get_object(self, pk):
-        try:
-            return Student.objects.get(pk=pk)
-        except Student.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        student = self.get_object(pk)
-        serializer = StudentSerializer(student)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        student = self.get_object(pk)
-        serializer = StudentSerializer(student, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        student = self.get_object(pk)
-        student.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def get_serializer_class(self):
+        if self.request.method in ('PUT', 'PATCH'):
+            return StudentUpdateSerializer
+        return StudentSerializer
 
 
-class StudentList(APIView):
-    authentication_classes = (NodeTokenAuth,)
+class StudentList(ListCreateAPIView):
     """List all students, or create a new student."""
+    def get_queryset(self):
+        queryset = Student.objects.all()
+        department = self.request.query_params.get('department')
+        faculty = self.request.query_params.get('faculty')
 
-    def get(self, request, format=None):
-        students = Student.objects.all()
-        serializer = StudentSerializer(students, many=True)
-        return Response(serializer.data)
+        # if department and faculty are passed filter based on the more
+        # specific parameter: department
+        if department is not None:
+            queryset = queryset.filter(department__name__iexact=department)
+        elif faculty is not None:
+            queryset = queryset.filter(department__faculty__name__iexact=faculty)
+        return queryset
 
-    def post(self, request, format=None):
-        serializer = StudentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return StudentUpdateSerializer
+        return StudentSerializer
