@@ -21,6 +21,7 @@ from attendance.serializers import (
     AttendanceSessionSerializer,
 )
 from course.serializers import CourseSerializer
+from student.serializers import StudentSerializer
 
 from db.models import (
     AcademicSession,
@@ -121,14 +122,13 @@ class AttendanceSessionList(generics.ListCreateAPIView):
             initiator__isnull=False,
             id__in=sessions_with_records,
             initiator_id=self.request.user.username,
-        )
+        ).order_by('-start_time')
 
 
 class AttendanceSessionByCourseList(generics.ListAPIView):
-    """Lists all attendance sessions for a course the user making request has
+    """Lists all attendance sessions for all courses the user making request has
     ever initiated an attendance for.
     """
-    pagination_class = AttendanceSessionPagination
     serializer_class = AttendanceSessionSerializer
 
     def get_queryset(self):
@@ -151,6 +151,36 @@ class AttendanceSessionByCourseList(generics.ListAPIView):
         if qs:
             all_attendance_sessions = qs[0].union(*qs[1:])
         return all_attendance_sessions
+
+
+class AttendanceSessionByCourseDetail(APIView):
+    """Gives a breakdown of student attendance rates for a course."""
+    def get(self, request):
+        context = {}
+        course = request.query_params.get('course')
+        session = request.query_params.get('session')
+
+        course_data = CourseSerializer(Course.objects.get(pk=course), many=False)
+        context['course'] = course_data.data
+
+        session_data = AcademicSessionSerializer(AcademicSession.objects.get(pk=session), many = False)
+        context['session'] = session_data.data
+
+
+        all_records = AttendanceRecord.objects.filter(attendance_session__course__id=course, attendance_session__session__id=session)
+
+        students = set(all_records.values_list('student', flat=True))
+        attendance_details = []
+        for student in students:
+            attendance_details.append({
+                "student": StudentSerializer(Student.objects.get(pk=student)).data,
+                "valid_check_ins": AttendanceRecordSerializer(all_records.filter(student_id=student, is_valid=True), many=True).data
+            })
+
+        context['student_attendance'] = attendance_details
+
+        return Response(context)
+
 
 
 class AttendanceList(APIView):
@@ -223,5 +253,6 @@ class StudentAttendanceList(APIView):
                 many=True,
             ).data
             student_attendance_report.append(item)
-            print("got here")
         return Response(student_attendance_report)
+
+
