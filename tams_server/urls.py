@@ -1,6 +1,6 @@
 """tams_server URL Configuration"""
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -25,9 +25,21 @@ urlpatterns = [
     path("api/v1/", include("djoser.urls")),
     path("api/v1/", include("djoser.urls.authtoken")),
     path("api/v1/accounts/", include("django.contrib.auth.urls")),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
+]
 # including login and logout views for the browsable API.
 urlpatterns += [
     path("api-auth/", include("rest_framework.urls")),
+]
+
+if settings.DEBUG:
+    from django.conf.urls.static import static
+    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+    urlpatterns += staticfiles_urlpatterns()
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.VUE_IMG_URL, document_root=settings.VUE_IMG_ROOT)
+
+# let vue handle all other url patterns not specified here
+urlpatterns += [
+    re_path("^.", vue_mount)
 ]

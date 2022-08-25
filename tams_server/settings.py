@@ -17,8 +17,8 @@ import json
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
-STATIC_DIR = os.path.join(BASE_DIR, "static")
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_DIR = os.path.join(BASE_DIR, "static_files")
+
 
 credentials_file_path = os.path.join(BASE_DIR, "credentials.json")
 with open(credentials_file_path, "r") as data:
@@ -59,17 +59,19 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://192.168.43.243:8000",
-    "http://192.168.43.243:8080",
-    "http://localhost:3000",
-    "http://localhost:8080",
-    "http://localhost:8000",
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://192.168.43.243:8000",
+#     "http://192.168.43.243:8080",
+#     "http://localhost:3000",
+#     "http://localhost:8080",
+#     "http://localhost:8000",
+# ]
 
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:8000'
-]
+CORS_ORIGIN_ALLOW_ALL = True
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8000"]
+# CSRF_TRUSTED_ORIGINS = [
+#     'http://localhost:8000'
+# ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -104,9 +106,9 @@ TEMPLATES = [
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "nodedevice.auth.NodeTokenAuth",
+        # "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
+        # "nodedevice.auth.NodeTokenAuth",
     ),
 }
 
@@ -154,8 +156,16 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = "static/"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
+
+VUE_IMG_ROOT = os.path.join(BASE_DIR, "static", "src", "vue", "dist", "img")
+VUE_IMG_URL = "/img/"
 
 STATICFILES_DIRS = [
     STATIC_DIR,
