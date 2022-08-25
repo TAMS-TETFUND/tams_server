@@ -137,7 +137,6 @@ def populate_model(request):
     return render(request, template, {"models": models_list})
 
 
-@login_required
 def data_file_format(request):
     """
     This view will provide the user with the format of the CSV
