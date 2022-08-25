@@ -1,8 +1,7 @@
 # tams_server
 The Time and Attendance Management System Server application.
 
-## Start development server after setting up environment
+## Before stating the server, collect static files to ensure you have updated js/css files from frontend build
 ```
-python manage.py runserver localhost:8000
+python manage.py collectstatic
 ```
-Ensure to use port 8000 to enable the frontend work
