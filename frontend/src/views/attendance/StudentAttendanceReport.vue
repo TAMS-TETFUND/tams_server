@@ -66,8 +66,9 @@ export default {
         async set_student_details(){
             this.errorMessage = null
             await axios
-            .get("/api/v1/students/"+this.$route.params.id)
+            .get("/api/v1/students/"+this.$route.params.id+"/")
             .then(response => {
+                console.log("got here", response)
                 this.student = response.data
                 this.full_name = response.data.last_name .toUpperCase()+ ", " + response.data.first_name.toUpperCase()
 

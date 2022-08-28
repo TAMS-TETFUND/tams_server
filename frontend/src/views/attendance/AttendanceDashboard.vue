@@ -1,5 +1,5 @@
 <template>
-    <section class="container-fluid bg-secondary bg-opacity-10 py-5 px-md-5">
+    <section class="container-fluid bg-secondary bg-opacity-10 py-5 px-md-5 col-md-10">
         <h3 class="mx-auto mb-5 mt-3 text-center">Attendance Records</h3>
         <div v-if="apiFetchFail"><ErrorDisplay errors="Something went wrong" /></div>
         <template v-if="attendance_sessions">
@@ -19,7 +19,7 @@
                     <tbody>
                         <tr v-for="session in attendance_sessions.results" v-bind:key="session.id">
                             <td>{{ session.session.session }}</td>
-                            <td><a v-bind:href="urlBase + session.id">{{ session.course.code }}: {{ session.course.title }}</a></td>
+                            <td><a v-bind:href="urlBase + session.id + '/'">{{ session.course.code }}: {{ session.course.title }}</a></td>
                             <td>{{ session.event_type_detail }}</td>
                             <td>{{ session.start_time }}</td>
                             <td>{{ session.duration }}</td>
@@ -52,7 +52,7 @@ export default {
     data() {
         return{
             attendance_sessions: null,
-            urlBase: axios.defaults.baseURL + '/api/v1/attendance/session/',
+            urlBase: '/api/v1/attendance/session/',
             errors: [],
             apiFetchFail: false,
             currentRoute: [],

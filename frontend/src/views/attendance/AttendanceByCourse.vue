@@ -1,5 +1,5 @@
 <template>
-    <section class="container-fluid bg-secondary bg-opacity-10 py-5 px-md-5">
+    <section class="container-fluid bg-secondary bg-opacity-10 py-5 px-md-5 col-md-10">
         <h3 class="mx-auto mb-5 mt-3 text-center">Attendance Records: By Courses</h3>
 
         <div v-if="apiFetchFail"><ErrorDisplay errors="Something went wrong" /></div>
@@ -21,7 +21,7 @@
                             <td>{{ session.session }}</td>
                             <td>
                                 <router-link v-bind:to="`/attendance/by-course/detail/${session.session_id}/${session.course_id}`">
-                                {{ session.course }}</router-link>
+                                {{ session.course }}: {{session.course_title}}</router-link>
                             </td>
                             <td>{{ session.lectures }}</td>
                             <td>{{ session.quiz }}</td>
@@ -29,7 +29,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <div>{{sessions_breakdown}}</div>
             </div>
             <div>
                 <Button type="button" class="btn btn-success btn-md mx-3" @click="loadPreviousPage()" v-if="hasPrev">Previous</Button>
@@ -80,7 +79,13 @@ export default {
             let initiatorList = []
             let responseData = response.data
             for (let i in responseData){
-                courseList.push([responseData[i].course.code, responseData[i].session.session, responseData[i].course.id, responseData[i].session.id])
+                courseList.push(
+                    [responseData[i].course.code, 
+                    responseData[i].session.session, 
+                    responseData[i].course.id, 
+                    responseData[i].session.id,
+                    responseData[i].course.title]
+                )
                 initiatorList.push(responseData[i].initiator)
             }
             const uniqueCourseList = courseList.filter((value, index) => {
@@ -96,7 +101,7 @@ export default {
                     return JSON.stringify(initiatorList) === _value
                 })
             })
-            console.log(uniqueCourseList)
+            console.log("This is uniqueCourseList"+uniqueCourseList)
             let lectureAndLabsCount, ExamCount, QuizCount
             for (let x in uniqueCourseList){
                 lectureAndLabsCount = 0 
@@ -118,18 +123,19 @@ export default {
                 }
                 this.sessions_breakdown.push({
                     "course":uniqueCourseList[x][0],
+                    "course_title":uniqueCourseList[x][4],
                     "session": uniqueCourseList[x][1],
                     "course_id": uniqueCourseList[x][2],
                     "session_id": uniqueCourseList[x][3],
                     "lectures": lectureAndLabsCount, 
                     "exams": ExamCount, 
                     "quiz": QuizCount, 
-                    "initiators_count": uniqueInitiatorsArray.length
+                    "initiators_count": uniqueInitiatorsArray.length,
                 })
 
             }
             this.dataReady = true
-            console.log(uniqueCourseList)
+            console.log(this.sessions_breakdown)
         })
         
         },

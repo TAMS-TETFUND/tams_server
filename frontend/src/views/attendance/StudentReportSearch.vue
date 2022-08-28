@@ -1,8 +1,7 @@
 <template>
     <div class="container mt-5">
-        <h2 class="text-center mb-3">Student Attendance Report</h2>
-
         <div class="col-md-6 container bg-secondary bg-opacity-10 py-5 px-md-5 mt-3">
+            <h2 class="text-center mb-5">Student Attendance Report</h2>
             <ErrorDisplay :errors="error" />
             <form @submit.prevent="submitForm">
                 <div class="row mb-3">
