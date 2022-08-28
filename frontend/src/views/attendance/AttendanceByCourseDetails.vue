@@ -95,7 +95,7 @@ export default {
 
             this.dataReady = false
             await axios
-            .get(`http://localhost:8009/api/v1/attendance/by-course/detail/?course=${this.$route.params.course}&session=${this.$route.params.session}`, {
+            .get(`/api/v1/attendance/by-course/detail/?course=${this.$route.params.course}&session=${this.$route.params.session}`, {
                 headers: {Authorization: 'Token ' + this.$store.state.token}
             })
             .then(response => {
