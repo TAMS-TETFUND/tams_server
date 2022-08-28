@@ -9,11 +9,12 @@ from django.http import (
     HttpResponseForbidden,
 )
 from django.db.models import Q, F
+from django.contrib.auth.decorators import login_required
+
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-
 from rest_framework import status
 from academicsession.serializers import AcademicSessionSerializer
 
@@ -32,25 +33,21 @@ from db.models import (
     Student,
 )
 
-
+# @login_required
+# figure out how to use users/me
 def download_attendance(request, pk):
     attendance_session = AttendanceSession.objects.get(id=pk)
+    print("the request username is %s" % request.user.username)
 
-    if (
-            attendance_session.initiator is None
-            or attendance_session.initiator.username != request.user.username
-    ):
-        return HttpResponseForbidden(
-            "403: Permission Denied %s here" % request.user.username
-        )
+    # if (
+    #         attendance_session.initiator is None
+    #         or attendance_session.initiator.username != request.user.username
+    # ):
+    #     return HttpResponseForbidden(
+    #         "403: Permission Denied %s here %s" % (request.user.username, request.__dict__)
+    #     )
 
-    qs = (
-        AttendanceRecord.objects.filter(
-            Q(
-                Q(attendance_session=attendance_session)
-                & Q(attendance_session__initiator_id=request.user.username)
-            )
-        )
+    qs = (AttendanceRecord.objects.filter(attendance_session=attendance_session)
         .prefetch_related("student")
         .values(
             "student__first_name",
@@ -164,11 +161,14 @@ class AttendanceSessionByCourseDetail(APIView):
         course_data = CourseSerializer(Course.objects.get(pk=course), many=False)
         context['course'] = course_data.data
 
-        session_data = AcademicSessionSerializer(AcademicSession.objects.get(pk=session), many = False)
+        session_data = AcademicSessionSerializer(AcademicSession.objects.get(pk=session), many=False)
         context['session'] = session_data.data
 
 
         all_records = AttendanceRecord.objects.filter(attendance_session__course__id=course, attendance_session__session__id=session)
+    
+        all_sessions = AttendanceSessionSerializer(AttendanceSession.objects.filter(course_id=course, session_id=session).order_by('start_time'), many=True)
+        context['all_sessions'] = all_sessions.data
 
         students = set(all_records.values_list('student', flat=True))
         attendance_details = []
