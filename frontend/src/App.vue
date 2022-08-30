@@ -67,8 +67,11 @@ body {
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.25s ease-out;
 }
+.component-mount {
+  overflow-x: hidden;
+}
 .component-mount a {
-  color:#69f0ae;
+  color:#dddddd;
 }
 .component-mount a:hover{
   color: #198754;

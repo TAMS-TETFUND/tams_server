@@ -29,12 +29,6 @@
                         </li>    
                       </ul>
                     </li>
-                    <!-- <li class="nav-item">
-                    <router-link class="nav-link" to="/attendance/download">Attendance Records</router-link>
-                    </li>
-                    <li class="nav-item">
-                    <router-link class="nav-link" to="/attendance/by-course">Attendance By Course</router-link>
-                    </li> -->
                     <li class="nav-item">
                       <router-link class="nav-link" to="/product-details">Product Details</router-link>
                     </li>
@@ -109,7 +103,7 @@ export default {
   display: flex;
   align-items: center;
   font-size: 15px;
-  color: #69f0ae;
+  color: #dddddd;
 }
 
 .navbar a i,

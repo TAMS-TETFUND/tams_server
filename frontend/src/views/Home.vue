@@ -9,7 +9,7 @@
                     <div class="row">
                         <h1>Welcome to TAMS</h1>
                         <p class="lead">
-                            A multi-modal biometric attendance management solution crafted for African schools.
+                            An end-to-end biometric attendance management solution crafted for African schools.
                         </p>
                         <router-link to="/" class="btn btn-success text-white col-md-4"><span class="me-1">Learn More</span><BIconArrowRightSquare /></router-link>
                     </div>                    
@@ -98,7 +98,7 @@
                 </div>
             </div>
         </div>
-        <div class="container footer-bottom clearfix p-5 mt-5">
+        <div class="container footer-bottom mt-5">
             <div class="copyright text-center">
                 &copy; Copyright <strong><span>TAMS</span></strong>. All Rights Reserved
             </div>

@@ -41,7 +41,7 @@ export default {
         submitForm() {
             this.submitting = true
                 axios
-                .get("/api/v1/students/"+ this.studentRegNumber)
+                .get("/api/v1/students/"+ this.studentRegNumber+"/")
                 .then(response => {
                     if (response.status == 200){
                         router.push("/attendance/student-report/"+this.studentRegNumber)

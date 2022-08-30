@@ -1,11 +1,15 @@
 <template>
-    <div class="container-fluid">
-        <h1>Contact Us</h1>
-    </div>
+    <ContentLayout>
+        <div class="text-center">
+            <h1>Contact</h1>
+        </div>
+    </ContentLayout>
 </template>
 
 <script>
+import ContentLayout from '../components/ContentLayout.vue'
 export default{
-    name: "Contact"
+    name: "Contact",
+    components: { ContentLayout }
 }
 </script>
