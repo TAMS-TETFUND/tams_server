@@ -9,14 +9,14 @@ from db.models import NodeDevice
 
 
 class NodeTokenAuth(BaseAuthentication):
-    keyword = "Token"
+    keyword = "NodeToken"
 
     def authenticate(self, request):
         auth = get_authorization_header(request).split()
 
         if not auth or auth[0].lower() != self.keyword.lower().encode():
             msg = _("No token header. No credentials provided.")
-            raise exceptions.AuthenticationFailed(msg)
+            return None
 
         if len(auth) <= 2:
             msg = _("Invalid token header. Credentials missing.")

@@ -106,9 +106,10 @@ TEMPLATES = [
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
+        "nodedevice.auth.NodeTokenAuth",
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
-        # "nodedevice.auth.NodeTokenAuth",
+        
     ),
 }
 
