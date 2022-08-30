@@ -1,6 +1,7 @@
 from rest_framework import serializers
+from rest_framework.relations import PrimaryKeyRelatedField
 
-from db.models import Department, Staff, StaffTitle
+from db.models import Staff, StaffTitle
 
 
 class StaffTitleSerializer(serializers.ModelSerializer):
@@ -9,35 +10,16 @@ class StaffTitleSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-# class StaffSerializer(serializers.ModelSerializer):
-#     department = serializers.PrimaryKeyRelatedField(
-#         queryset=Department.objects.all(), many=False
-#     )
-#     staff_titles = serializers.PrimaryKeyRelatedField(
-#         queryset=StaffTitle.objects.all(), many=True
-#     )
-#
-#     class Meta:
-#         model = Staff
-#         fields = "__all__"
-
-
-class StaffSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=150, )
-    first_name = serializers.CharField(max_length=150, )
-    last_name = serializers.CharField(max_length=150, )
-    other_names = serializers.CharField(max_length=255, allow_null=True, allow_blank=True, )
-    sex = serializers.IntegerField()
-    password = serializers.CharField(max_length=128, )
-    face_encodings = serializers.CharField(allow_null=True, allow_blank=True)
-    fingerprint_template = serializers.CharField(default='', allow_null=True, allow_blank=True)
-    department = serializers.PrimaryKeyRelatedField(
-        queryset=Department.objects.all(), many=False
+class StaffSerializer(serializers.ModelSerializer):
+    staff_titles = PrimaryKeyRelatedField(
+        required=False,
+        queryset=StaffTitle.objects.all(), many=True
     )
+    password = serializers.CharField(max_length=128, required=False)
 
-    # staff_titles = PrimaryKeyRelatedField(
-    #     queryset=StaffTitle.objects.all(), many=True
-    # )
+    class Meta:
+        model = Staff
+        fields = '__all__'
 
     def create(self, validated_data):
         staff_no = validated_data.get('username')
@@ -46,13 +28,7 @@ class StaffSerializer(serializers.Serializer):
         if instance is not None:
             return instance
 
-        instance = Staff(staff_number=staff_no, **validated_data)
+        instance = Staff(**validated_data)
         instance.set_password(validated_data.get('password'))
-        instance.save()
-        return instance
-
-    def update(self, instance, validated_data):
-        for key, value in validated_data.items():
-            setattr(instance, key, value)
         instance.save()
         return instance
