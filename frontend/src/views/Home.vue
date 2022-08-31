@@ -3,9 +3,9 @@
         <div class="p-5 rounded-3 mb-5">
             <div class="row">
                 <div class="col-xs-12 col-sm-6 d-sm-flex">
-                    <img src="../assets/fingerprint.svg" alt="Fingerprint" class="img-fluid">
+                    <img src="../assets/educator.svg" alt="educator" class="img-fluid">
                 </div>
-                <div class="col-xs-12 col-sm-6 d-flex align-items-start">
+                <div class="col-xs-12 col-sm-6 d-flex align-items-center">
                     <div class="row">
                         <h1>Welcome to TAMS</h1>
                         <p class="lead">

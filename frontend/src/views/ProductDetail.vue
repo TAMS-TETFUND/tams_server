@@ -3,11 +3,23 @@
         <div class="text-center">
             <h1 class="mb-5">Product Details</h1>
         </div>
+        
         <div>
-            <p>The Time and Attendance Management system (TAMS) is a
-                multi-modal biometric attendance system designed primarily for use in
-                tertiary institutions in Nigeria. The project is backed by the Tertiary
-                Education Fund (TETFUND) of Nigeia.</p>
+            <div class="row mb-5">
+                <div class="d-md-flex align-items-center">
+                    <div class="col-md-6">
+                        <img src="~@/assets/fingerprint.svg" alt="Fingerprint" class="img-fluid">
+                    </div>
+                    <div class="col-md-6">
+                        <p class="lead">
+                            The Time and Attendance Management system (TAMS) is a
+                            multi-modal biometric attendance system designed primarily for use in
+                            tertiary institutions in Nigeria. The project is backed by the Tertiary
+                            Education Fund (TETFUND) of Nigeia.
+                        </p>
+                    </div>
+                </div>
+            </div>
             <h3 class="text-warning">Attendance Logging</h3>
             The system supports two modes of biometric verification: 
             <div class="row">
