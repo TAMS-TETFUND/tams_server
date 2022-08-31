@@ -19,7 +19,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 STATIC_DIR = os.path.join(BASE_DIR, "static_files")
 
-
 credentials_file_path = os.path.join(BASE_DIR, "credentials.json")
 with open(credentials_file_path, "r") as data:
     cred_dict = json.loads(data.read())
@@ -107,9 +106,9 @@ TEMPLATES = [
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "nodedevice.auth.NodeTokenAuth",
-        "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
-        
+        "rest_framework.authentication.TokenAuthentication",
+
     ),
 }
 
