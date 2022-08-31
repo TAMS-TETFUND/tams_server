@@ -20,6 +20,7 @@ class AttendanceSessionSerializer(serializers.ModelSerializer):
     session = AcademicSessionSerializer(many=False, read_only=True)
     event_type_detail = serializers.SerializerMethodField()
     status_detail = serializers.SerializerMethodField()
+    student_check_in_count = serializers.SerializerMethodField()
 
     class Meta:
         model = AttendanceSession
@@ -30,6 +31,9 @@ class AttendanceSessionSerializer(serializers.ModelSerializer):
 
     def get_status_detail(self, obj, choices=AttendanceSessionStatusChoices):
         return AttendanceSessionStatusChoices(obj.status).label
+
+    def get_student_check_in_count(self, obj):
+        return AttendanceRecord.objects.filter(attendance_session=obj.pk).count()
 
 
 class AttendanceRecordSerializer(serializers.ModelSerializer):

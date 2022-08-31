@@ -1,24 +1,22 @@
 <template>
-    <div class="log-in-page p-3 rounded-3">
-        <div class="row">
-            <div class="col d-none d-sm-block"></div>
-            <div class="col-xl-8 bg-secondary bg-opacity-25 border border-success p-5 mt-5">
+    <div class="container-fluid p-3 rounded-3">
+        <div class="row">        
+            <div class="col-md-6 bg-secondary bg-opacity-10 py-5 px-md-5 mt-5 mx-auto d-md-inline d-xs-block">
                 <h2 class="pb-4 text-center">Login</h2>
                 <LoadingAnimation :visible="false" />
                 <ErrorDisplay :errors="errorMessage" />
                 <form @submit.prevent="submitForm">
                     <div class="row mb-3">
-                        <label for="Staff Number" class="col-sm-3 col-form-label">Staff Number</label>
-                        <div class="col-sm-9">
+                        <label for="Staff Number" class="col-md-3 col-form-label">Staff Number</label>
+                        <div class="col-md-9">
                             <input type="text" class="form-control" :class="{'opacity-50': submitting}" v-model="username" required="required" :disabled="submitting" />
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="password" class="col-sm-3 col-form-label">Password</label>
-                        <div class="col-sm-9">
+                        <label for="password" class="col-md-3 col-form-label">Password</label>
+                        <div class="col-md-9">
                             <input type="password" class="form-control" :class="{'opacity-50': submitting}" v-model="password" required="required" :disabled="submitting" />
                         </div>
-                        
                     </div>
                     <div class="col d-flex justify-content-end">
                         <button class="btn btn-success btn-lg mt-3" type="submit" :disabled="submitting"><BIconBoxArrowInRight class="mx-1" />Log In</button>
@@ -26,7 +24,6 @@
                     
                 </form>
             </div>
-            <div class="col d-none d-sm-block"></div>
         </div>
     </div>
 </template>

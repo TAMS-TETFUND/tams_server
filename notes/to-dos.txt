@@ -55,3 +55,11 @@ Student Attendance Report > Reg Number Search Box > Overview
 =============================================
 course coordinators should have the permission of invalidating/deleting an 
     attendance session
+
+===========================================
+add scroll bar to windows with forms that may be longer than the specified width
+add more filters for filtering the courses in new event creation
+test on the pi
+====================
+student average attendance rate for current session
+list of all students that ever attended your course, their attendance rate: collated attendance list

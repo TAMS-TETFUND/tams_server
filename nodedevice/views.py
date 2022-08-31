@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from db.models import NodeDevice, Student, Staff, Course
+from db.models import Department, Faculty, NodeDevice, Student, Staff, Course
 from db.datasynch import dump_data
 from nodedevice.auth import NodeTokenAuth
 from nodedevice.serializers import NodeDeviceSerializer
@@ -94,6 +94,8 @@ class NodeSyncView(APIView):
             "db.department",
             "db.student",
             "db.course",
+            "db.department",
+            "db.faculty"
         )
 
         out = []

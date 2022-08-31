@@ -3,10 +3,14 @@ import { createWebHistory, createRouter } from "vue-router"
 import Home from "@/views/Home.vue"
 import Login from "@/views/Login.vue"
 import PageNotFound from "@/views/PageNotFound.vue"
-import AttendanceDashboard from "@/views/AttendanceDashboard.vue"
-import AttendanceByCourse from "@/views/AttendanceByCourse.vue"
-import StudentAttendanceReport from "@/views/StudentAttendanceReport.vue"
+import AttendanceDashboard from "@/views/attendance/AttendanceDashboard.vue"
+import AttendanceByCourse from "@/views/attendance/AttendanceByCourse.vue"
+import AttendanceByCourseDetails from "@/views/attendance/AttendanceByCourseDetails.vue"
+import StudentAttendanceReport from "@/views/attendance/StudentAttendanceReport.vue"
+import StudentReportSearch from "@/views/attendance/StudentReportSearch.vue"
 import DraggableDemo from "@/views/DraggableDemo.vue"
+import Contact from "@/views/Contact.vue"
+import ProductDetail from "@/views/ProductDetail.vue"
 import store from "../store"
 import NProgress from "nprogress"
 
@@ -18,11 +22,21 @@ const routes = [
     },
     {
         path: "/draggable",
-        name: "DraggableDemo",
+        name: "Draggable Demo",
         component: DraggableDemo,
     },
     {
-        path: "/attendance",
+        path: "/product-details",
+        name: "Product Details",
+        component: ProductDetail,
+    },
+    {
+        path: "/contact",
+        name: "Contact Us",
+        component: Contact,
+    },
+    {
+        path: "/attendance/download",
         name: "Attendance",
         component: AttendanceDashboard,
 
@@ -32,17 +46,34 @@ const routes = [
     },
     {
         path: "/attendance/by-course",
-        name: "AttendanceByCourse",
+        name: "Attendance By Course",
         component: AttendanceByCourse,
 
         meta: {
             requireLogin: true
         }
     },
+    {
+        path: "/attendance/by-course/detail/:session/:course",
+        name: "Attendance By Course Details",
+        component: AttendanceByCourseDetails,
 
+        meta: {
+            requireLogin: true
+        }
+    },
+    {
+        path: "/attendance/student-report/",
+        name: "Student Report Search",
+        component: StudentReportSearch,
+
+        meta: {
+            requireLogin: true
+        }
+    },
     {
         path: "/attendance/student-report/:id(.*)",
-        name: "StudentAttendanceReport",
+        name: "Student Attendance Report",
         component: StudentAttendanceReport,
 
         meta: {
@@ -60,7 +91,7 @@ const routes = [
     },
     {
         path: "/:catchAll(.*)",
-        name: "PageNotFound",
+        name: "Page Not Found",
         component: PageNotFound,
     }
 ]

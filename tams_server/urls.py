@@ -1,6 +1,6 @@
 """tams_server URL Configuration"""
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -10,8 +10,8 @@ from home.views import vue_mount
 
 urlpatterns = [
     path("", vue_mount, name="home"),
-    path("admin/uploads/", populate_model, name="upload"),
-    path("admin/upload-format/", data_file_format, name="upload_format"),
+    path("api/v1/admin/uploads/", populate_model, name="upload"),
+    path("api/v1/admin/upload-format/", data_file_format, name="upload_format"),
     path("api/v1/admin/", admin.site.urls),
     path("api/v1/staff/", include("staff.urls")),
     path("api/v1/students/", include("student.urls")),
@@ -24,10 +24,19 @@ urlpatterns = [
     path("api/v1/node-devices/", include("nodedevice.urls")),
     path("api/v1/", include("djoser.urls")),
     path("api/v1/", include("djoser.urls.authtoken")),
-    path("accounts/", include("django.contrib.auth.urls")),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path("api/v1/accounts/", include("django.contrib.auth.urls")),
+    path("api/v1/api-auth/", include("rest_framework.urls")),
+]
 
-# including login and logout views for the browsable API.
+if settings.DEBUG:
+    from django.conf.urls.static import static
+    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+    urlpatterns += staticfiles_urlpatterns()
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.VUE_IMG_URL, document_root=settings.VUE_IMG_ROOT)
+
+# let vue handle all other url patterns not specified here
 urlpatterns += [
-    path("api-auth/", include("rest_framework.urls")),
+    re_path("^.", vue_mount)
 ]
