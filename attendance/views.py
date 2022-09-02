@@ -5,6 +5,7 @@ from django.db import IntegrityError
 from django.http import (
     Http404,
     HttpResponse,
+    HttpResponseBadRequest,
     HttpResponseServerError,
     HttpResponseForbidden,
 )
@@ -97,6 +98,58 @@ def download_attendance(request, pk):
         )
 
     return response
+
+def download_collated_attendance(request):
+    """
+    This view is for processing and returning a CSV file of collated attendance
+    for a course the user making the request has initiated an attendance for.
+    
+    get all attendance sessions for a course in the given session,
+    get all the students that ever attended an event for the course,
+    for each student check attedance for every attendance session list from step one
+    """
+    course = request.query_params.get('course')
+    session = request.query_params.get('session')
+    if course is None or session is None:
+        return HttpResponseBadRequest('Invalid request: specify course and session')
+    
+    
+    if not (course_obj := Course.objects.filter(pk=course)).exists():
+        return Http404('Course does not exist')
+    if not (session_obj := AcademicSession.objects.filter(pk=session)).exists():
+        return Http404('Academic Session does not exist')
+    
+    course_obj = course_obj.first()
+    session_obj = session_obj.first()
+
+    all_course_events = AttendanceSession.objects.filter(course=course_obj, session=session_obj).order_by('-start_time')
+    course_events_list = all_course_events.values_list('id', flat=True)
+    all_attendance_records = AttendanceRecord.objects.filter(attendance_session__in=course_events_list)
+    students_in_attendance = set(all_attendance_records.order_by('-student__last_name').values_list('student__reg_number', 'student__first_name', 'student_last_name', 'student__department__name', 'student__level_of_study'))
+    attendance_tally = {}
+
+    for student in students_in_attendance:
+        student_tally = []
+        for event in course_events_list:
+            if AttendanceRecord.objects.filter(student_id=student[0], attendance_session=event).exists():
+                student_tally.append('PRESENT')
+            else:
+                student_tally.append('ABSENT')
+        attendance_tally[student] = student_tally
+
+    
+    response = HttpResponse(
+        content_type="text/csv",
+        headers={
+            f"Content-Disposition": "attachment; filename="
+                                    f"{course_obj.code} {session_obj.session} Collated Attendance.csv"
+        }
+    )
+
+    # field_names = ["Reg_number", "Name"] + [session_date for session_date in ]
+
+    
+
 
 
 class AttendanceSessionPagination(PageNumberPagination):
