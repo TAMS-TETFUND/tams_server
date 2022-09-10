@@ -19,9 +19,19 @@
                     <tbody>
                         <tr v-for="session in attendance_sessions.results" v-bind:key="session.id">
                             <td>{{ session.session.session }}</td>
-                            <td><a v-bind:href="urlBase + session.id + '/'">{{ session.course.code }}: {{ session.course.title }}</a></td>
+                            <td>
+                                <a 
+                                href="" 
+                                @click.prevent="downloadAttendanceFile(
+                                    urlBase + session.id + '/', 
+                                    session.course.code + ' ' + session.event_type_detail + ' - ' + formattedDate(session.start_time)
+                                    )"
+                                >
+                                    {{ session.course.code }}: {{ session.course.title }}
+                                </a>
+                            </td>
                             <td>{{ session.event_type_detail }}</td>
-                            <td>{{ session.start_time }}</td>
+                            <td>{{ formattedTime(session.start_time) }} {{ formattedDate(session.start_time) }}</td>
                             <td>{{ session.duration }}</td>
                             <td>{{ session.status_detail }}</td>
                             <td>{{ session.student_check_in_count }}</td>
@@ -52,7 +62,7 @@ export default {
     data() {
         return{
             attendance_sessions: null,
-            urlBase: '/api/v1/attendance/session/',
+            urlBase: axios.defaults.baseURL+ '/api/v1/attendance/session/',
             errors: [],
             apiFetchFail: false,
             currentRoute: [],
@@ -80,6 +90,21 @@ export default {
             this.errors.push(error)
         }) 
         },
+        async downloadAttendanceFile(downloadUrl, fileName){
+            axios({
+                url: downloadUrl,
+                method: 'GET',
+                responseType: 'blob',
+                headers: {Authorization: 'Token ' + this.$store.state.token}
+            }).then((response) => {
+                const url = window.URL.createObjectURL(new Blob([response.data]))
+                const link = document.createElement('a')
+                link.href = url
+                link.setAttribute('download', fileName + '.csv')
+                document.body.appendChild(link)
+                link.click()
+            })
+        },
         loadNextPage(){
             this.currentPage += 1
             this.fetchAttendanceSessions()
@@ -87,6 +112,14 @@ export default {
         loadPreviousPage(){
             this.currentPage -= 1
             this.fetchAttendanceSessions()
+        },
+        formattedDate(dateString) {
+            var dateObj = new Date(dateString)
+            return dateObj.getDate()+'-'+dateObj.getMonth()+'-'+dateObj.getFullYear()
+        },
+        formattedTime(dateString) {
+            var dateObj = new Date(dateString)
+            return dateObj.getHours()+':'+dateObj.getMinutes()
         }
     }
 }
