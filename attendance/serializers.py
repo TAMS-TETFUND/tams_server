@@ -33,7 +33,9 @@ class AttendanceSessionSerializer(serializers.ModelSerializer):
         return AttendanceSessionStatusChoices(obj.status).label
 
     def get_student_check_in_count(self, obj):
-        return AttendanceRecord.objects.filter(attendance_session=obj.pk).count()
+        return AttendanceRecord.objects.filter(
+            attendance_session=obj.pk
+        ).count()
 
 
 class AttendanceRecordSerializer(serializers.ModelSerializer):

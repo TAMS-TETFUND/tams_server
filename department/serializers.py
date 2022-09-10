@@ -13,7 +13,9 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
 
 class DepartmentUpdateSerializer(serializers.ModelSerializer):
-    faculty = serializers.PrimaryKeyRelatedField(queryset=Faculty.objects.all(), many=False)
+    faculty = serializers.PrimaryKeyRelatedField(
+        queryset=Faculty.objects.all(), many=False
+    )
 
     class Meta:
         model = Department

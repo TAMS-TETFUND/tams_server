@@ -34,9 +34,9 @@ if settings.DEBUG:
 
     urlpatterns += staticfiles_urlpatterns()
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.VUE_IMG_URL, document_root=settings.VUE_IMG_ROOT)
+    urlpatterns += static(
+        settings.VUE_IMG_URL, document_root=settings.VUE_IMG_ROOT
+    )
 
 # let vue handle all other url patterns not specified here
-urlpatterns += [
-    re_path("^.", vue_mount)
-]
+urlpatterns += [re_path("^.", vue_mount)]

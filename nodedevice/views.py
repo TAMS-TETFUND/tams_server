@@ -95,7 +95,7 @@ class NodeSyncView(APIView):
             "db.student",
             "db.course",
             "db.department",
-            "db.faculty"
+            "db.faculty",
         )
 
         out = []
@@ -106,7 +106,7 @@ class NodeSyncView(APIView):
                 call_command(
                     "dump_object",
                     db[i],
-                    '*',
+                    "*",
                     stdout=output,
                 )
 
