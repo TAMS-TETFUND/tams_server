@@ -1,4 +1,3 @@
-import csv
 from datetime import datetime
 
 from django.db import IntegrityError
@@ -7,21 +6,22 @@ from django.http import (
     HttpResponse,
     HttpResponseBadRequest,
     HttpResponseServerError,
-    HttpResponseForbidden,
 )
 from django.db.models import Q, F
 from django.contrib.auth.decorators import login_required
-
 from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
-from academicsession.serializers import AcademicSessionSerializer
+from openpyxl.writer.excel import save_virtual_workbook
 
+from academicsession.serializers import AcademicSessionSerializer
 from attendance.serializers import (
+    AttendanceRecordCreationSerializer,
     AttendanceRecordSerializer,
+    AttendanceSessionCreationSerializer,
     AttendanceSessionSerializer,
 )
 from course.serializers import CourseSerializer
@@ -34,18 +34,18 @@ from db.models import (
     Course,
     Student,
 )
+from .spreadsheets import generate_attendance_records_sheet
 
 
 @api_view(["GET"])
-@login_required
 def download_attendance(request, pk):
     attendance_session = AttendanceSession.objects.get(id=pk)
 
-    if (
-        attendance_session.initiator is None
-        or attendance_session.initiator.username != request.user.username
-    ):
-        return HttpResponseForbidden("403: Permission Denied")
+    # if (
+    #     attendance_session.initiator is None
+    #     or attendance_session.initiator.username != request.user.username
+    # ):
+    #     return HttpResponseForbidden("403: Permission Denied")
 
     qs = (
         AttendanceRecord.objects.filter(attendance_session=attendance_session)
@@ -69,34 +69,17 @@ def download_attendance(request, pk):
     if not qs.exists():
         return HttpResponseServerError("Error: No records found")
 
+    wb = generate_attendance_records_sheet(attendance_session, qs)
+
     response = HttpResponse(
-        content_type="text/csv",
+        content=save_virtual_workbook(wb),
+        content_type="application/ms-excel",
         headers={
             f"Content-Disposition": "attachment; filename="
             f"{attendance_session.course.code} "
-            f'Attendance {datetime.strftime(attendance_session.start_time, "%d-%m-%Y")}.csv'
+            f'Attendance {datetime.strftime(attendance_session.start_time, "%d-%m-%Y")}.xlsx'
         },
     )
-
-    field_names = ["S/N", "Name", "Reg. Number", "Department", "Sign In"]
-    attendance_writer = csv.DictWriter(response, fieldnames=field_names)
-    attendance_writer.writerow(
-        {
-            "S/N": f'{attendance_session.course.code} Attendance {datetime.strftime(attendance_session.start_time, "%d-%m-%Y")}'
-        }
-    )
-    attendance_writer.writeheader()
-    for idx, row in enumerate(qs, 1):
-        attendance_writer.writerow(
-            {
-                "S/N": idx,
-                "Name": f'{row["student__last_name"].capitalize()} {row["student__first_name"].capitalize()}',
-                "Reg. Number": row["student__reg_number"],
-                "Department": row["student__department__name"],
-                "Sign In": f'{datetime.strftime(row["check_in_by"], "%H:%M")}',
-            }
-        )
-
     return response
 
 
@@ -173,7 +156,11 @@ class AttendanceSessionList(generics.ListCreateAPIView):
 
     ordering_fields = ["session__session", "course"]
     pagination_class = AttendanceSessionPagination
-    serializer_class = AttendanceSessionSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return AttendanceSessionCreationSerializer
+        return AttendanceSessionSerializer
 
     def get_queryset(self):
         sessions_with_records = set(
@@ -187,6 +174,16 @@ class AttendanceSessionList(generics.ListCreateAPIView):
             id__in=sessions_with_records,
             initiator_id=self.request.user.username,
         ).order_by("-start_time")
+
+    def create(self, request, *args, **kwargs):
+        """Create method that can allow a post request of list of AttendanceSession objects."""
+        if not isinstance(request.data, list):
+            return super(AttendanceSessionList, self).create(request, *args, **kwargs)
+        serializer = self.get_serializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class AttendanceSessionByCourseList(generics.ListAPIView):
@@ -291,7 +288,7 @@ class AttendanceList(APIView):
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         for record_data in request.data:
-            serializer = AttendanceRecordSerializer(data=record_data)
+            serializer = AttendanceRecordCreationSerializer(data=record_data)
             if not serializer.is_valid():
                 return Response(
                     serializer.errors, status=status.HTTP_400_BAD_REQUEST

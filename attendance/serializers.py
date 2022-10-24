@@ -49,3 +49,16 @@ class AttendanceRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = AttendanceRecord
         fields = "__all__"
+
+class AttendanceSessionCreationSerializer(serializers.ModelSerializer):
+    """Serializer for the AttendanceSession model."""
+    class Meta:
+        model = AttendanceSession
+        fields = "__all__"
+
+
+class AttendanceRecordCreationSerializer(serializers.ModelSerializer):
+    """Serializer for the AttendanceRecord model."""
+    class Meta:
+        model = AttendanceRecord
+        fields = "__all__"
