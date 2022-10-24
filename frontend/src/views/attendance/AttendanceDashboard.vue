@@ -21,11 +21,8 @@
                             <td>{{ session.session.session }}</td>
                             <td>
                                 <a 
-                                href="" 
-                                @click.prevent="downloadAttendanceFile(
-                                    urlBase + session.id + '/', 
-                                    session.course.code + ' ' + session.event_type_detail + ' - ' + formattedDate(session.start_time)
-                                    )"
+                                :href="getDownloadURL(session.id)"
+                                
                                 >
                                     {{ session.course.code }}: {{ session.course.title }}
                                 </a>
@@ -51,7 +48,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 import ErrorDisplay from '../../components/ErrorDisplay.vue'
 import TableSkeleton from '../../components/TableSkeleton.vue'
 export default {
@@ -62,7 +59,8 @@ export default {
     data() {
         return{
             attendance_sessions: null,
-            urlBase: axios.defaults.baseURL+ '/api/v1/attendance/session/',
+            axiosURLBase: this.axios.defaults.baseURL,
+            urlBase: this.axiosURLBase + '/api/v1/attendance/session/',
             errors: [],
             apiFetchFail: false,
             currentRoute: [],
@@ -77,7 +75,7 @@ export default {
     },
     methods: {
         async fetchAttendanceSessions(){
-        await axios
+        await this.axios
         .get(`/api/v1/attendance/?page=${this.currentPage}`, {
             headers: {Authorization: 'Token ' + this.$store.state.token}
         })
@@ -91,7 +89,7 @@ export default {
         }) 
         },
         async downloadAttendanceFile(downloadUrl, fileName){
-            axios({
+            this.axios({
                 url: downloadUrl,
                 method: 'GET',
                 responseType: 'blob',
@@ -120,7 +118,11 @@ export default {
         formattedTime(dateString) {
             var dateObj = new Date(dateString)
             return dateObj.getHours()+':'+dateObj.getMinutes()
+        },
+        getDownloadURL(sessionID){
+            return "/api/v1/attendance/session/" + sessionID + "/"
         }
+        
     }
 }
 </script>

@@ -6,10 +6,11 @@ import axios from 'axios'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
-axios.defaults.baseURL = "http://localhost:8009"
 axios.defaults.headers.common["Authorization"] = "Token " + localStorage.getItem('token')
-
-createApp(App)
+const app = createApp(App)
 .use(router)
 .use(store)
-.mount('#app')
+
+app.config.globalProperties.axios = axios
+
+app.mount('#app')
